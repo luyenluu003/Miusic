@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import testlogo from "../imgs/testlogo.svg";
 import AnimationWrapper from "../common/page-animation";
 import defaultBanner from "../imgs/blog banner.png";
@@ -8,8 +8,12 @@ import { Toaster, toast } from "react-hot-toast";
 import { EditorContext } from "../pages/editor.pages";
 import EditorJS from "@editorjs/editorjs";
 import { tools } from "./tools.component";
+import axios from "axios";
+import { UserContext } from "../App";
 
 const BlogEditor = () => {
+  const navigate = useNavigate()
+  let {blog_id} = useParams()
   const [musicFile, setMusicFile] = useState("");
   let {
     blog,
@@ -20,12 +24,16 @@ const BlogEditor = () => {
     setEditorState,
   } = useContext(EditorContext);
 
+  let {
+    userAuth: { access_token },
+  } = useContext(UserContext);
+  // const { access_token } = useContext(UserContext).userAuth;
   //UseEffect
   useEffect(() => {
     setTextEditor(
       new EditorJS({
         holderId: "textEditor",
-        data: content,
+        data: Array.isArray(content) ? content[0] : content,
         tools: tools,
         placeholder: "Let's write an awesome story",
       })
@@ -34,7 +42,6 @@ const BlogEditor = () => {
 
   const handleBannerUpload = (e) => {
     let img = e.target.files[0];
-    console.log("IMG:", img);
     if (img) {
       let loadingToast = toast.loading("Uploading...");
 
@@ -56,15 +63,12 @@ const BlogEditor = () => {
 
   const handleMusicUpload = (event) => {
     const audio = event.target.files[0];
-    console.log("Audio:", audio);
 
     if (audio) {
       setMusicFile(audio);
-      console.log("musicFile", musicFile);
       uploadAudio(audio)
         .then((url) => {
           if (url) {
-            console.log("URL", url);
             setBlog({ ...blog, music: url });
           }
         })
@@ -76,7 +80,6 @@ const BlogEditor = () => {
   };
 
   const handleTitleKeyDown = (e) => {
-    console.log(e);
     if (e.keyCode == 13) {
       //enter key
       e.preventDefault();
@@ -98,11 +101,14 @@ const BlogEditor = () => {
   };
 
   const handlePublishEvent = () => {
-    if (!banner.length) {
-      return toast.error("Upload a blog banner to publish it");
+    if (!banner.length || !banner) {
+      return toast.error("Upload a post banner to publish it");
     }
     if (!title || !title.length) {
-      return toast.error("Write blog title to publish it");
+      return toast.error("Write post title to publish it");
+    }
+    if (!music.length || !music) {
+      return toast.error("Upload a post music to publish it")
     }
     if (textEditor.isReady) {
       textEditor
@@ -121,6 +127,52 @@ const BlogEditor = () => {
     }
   };
 
+  const handleSaveDraft = (e) => {
+    if (e.target.className.includes("disable")) {
+      return;
+    }
+    if (!title || !title.length) {
+      return toast.error("write blog title before saving it as a draft");
+    }
+
+    let loadingToast = toast.loading("Saving draft...");
+
+    e.target.classList.add("diable");
+    if (textEditor.isReady) {
+      textEditor.save().then((content) => {
+        let blogObj = {
+          title,
+          banner,
+          music,
+          des,
+          content,
+          tags,
+          draft: true
+        };
+        axios
+          .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", {...blogObj,id:blog_id}, {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+            },
+          })
+          .then(() => {
+            e.target.classList.remove('disable');
+            toast.dismiss(loadingToast)
+            toast.success("Saved")
+
+            setTimeout(() => {
+              navigate('/')
+            }, 500)
+          })
+          .catch((response) => {
+            e.target.classList.remove('disable');
+            toast.dismiss(loadingToast)
+            return toast.error(response.data.error)
+          })
+      })
+    }
+  }
+
   return (
     <>
       <nav className="navbar">
@@ -128,9 +180,9 @@ const BlogEditor = () => {
           <img src={testlogo} />
         </Link>
 
-        <p className="max-md:hidden text-blue-gwen line-clamp-1 w-full">
-          {title && typeof title === "string" && title.length
-            ? title
+        <p className="max-md:hidden text-white line-clamp-1 w-full">
+          {blog && blog.title && typeof blog.title === "string" && blog.title.length
+            ? blog.title
             : "New Blog"}
         </p>
 
@@ -138,7 +190,7 @@ const BlogEditor = () => {
           <button className="btn-dark py-2" onClick={handlePublishEvent}>
             Publish
           </button>
-          <button className="btn-light py-2">Save Draft</button>
+          <button className="btn-light py-2" onClick={handleSaveDraft}>Save Draft</button>
         </div>
       </nav>
       <Toaster />
@@ -158,9 +210,9 @@ const BlogEditor = () => {
               </label>
             </div>
 
-            <div className="relative text-center mt-2">
-              <label htmlFor="uploadMusic">
-                <div className="text-white text-center m-5">Upload Music</div>
+            <div className="relative text-center mt-2 ">
+              <label htmlFor="uploadMusic" className="flex justify-center cursor-pointer w-full">
+                <div className="text-white text-center m-5 btn-blue-gwen w-[20%]">Upload Music</div>
                 <input
                   className="absolute top-0 left-0 w-full h-full opacity-0"
                   id="uploadMusic"
@@ -171,11 +223,15 @@ const BlogEditor = () => {
                 />
               </label>
               <audio className="w-full" controls="controls" id="audio">
-                {musicFile && (
-                  <source
-                    id="audioSource"
-                    src={URL.createObjectURL(musicFile)}
-                  />
+                {music && music.length ? (
+                  <source id="audioSource" src={music} />
+                ) : (
+                  musicFile && (
+                    <source
+                      id="audioSource"
+                      src={URL.createObjectURL(musicFile)}
+                    />
+                  )
                 )}
               </audio>
             </div>
@@ -183,7 +239,7 @@ const BlogEditor = () => {
             <textarea
               defaultValue={title}
               placeholder="Blog Title"
-              className="text-4xl font-medium w-full h-20 outline-none resize-non mt-10 leading-tight placeholder:opacity-40 "
+              className="text-4xl font-medium w-full rounded-lg h-20 outline-none resize-non mt-10 leading-tight placeholder:opacity-40 "
               onKeyDown={handleTitleKeyDown}
               onChange={handleTitleChange}
             ></textarea>

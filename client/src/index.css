@@ -26,6 +26,7 @@
     @apply py-4 px-[5vw] md:px-[7vw] lg:px-[10vw];
   }
 
+
   ::selection {
     @apply bg-purple/30;
   }
@@ -126,6 +127,10 @@
   .blog-index {
     @apply text-4xl sm:text-3xl lg:text-5xl font-bold text-grey leading-none;
   }
+  .card{
+    @apply w-full h-full;
+  }
+ 
 }
 
 .ce-block__content,

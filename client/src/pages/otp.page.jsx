@@ -19,7 +19,6 @@ const SendOtp = ({ type }) => {
   }, [location.state]);
   const formData = location.state?.formData || null;
 
-  console.log("Formdata", formData);
   let {
     userAuth: { access_token },
     setUserAuth,
@@ -36,7 +35,6 @@ const SendOtp = ({ type }) => {
           access_token: user?.accessToken,
         };
 
-        console.log(user);
 
         userAuthThroughServer(serverRoute, formData);
       })
@@ -69,8 +67,6 @@ const SendOtp = ({ type }) => {
       return toast.error("Enter OTP");
     }
 
-    console.log("email", formData.email);
-    console.log("code", formOtp.otp);
     const route = "/verify-code"; //
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + route, {
@@ -79,12 +75,9 @@ const SendOtp = ({ type }) => {
       })
       .then(({ data }) => {
         if (data == "Xác nhận thành công.") {
-          console.log("Thành công");
           const Routesingup = "/signup";
           userAuthThroughServer(Routesingup, formData);
         } else {
-          console.log("Thất bại");
-          console.log("data", data);
           toast.error("Wrong otp, please re-enter otp !");
         }
       })

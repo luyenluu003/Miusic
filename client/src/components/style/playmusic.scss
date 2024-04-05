@@ -1,0 +1,37 @@
+.progresBar {
+    width: 78%;
+    position: relative;
+    height: 5px;
+    outline: none;
+    border: none;
+    appearance: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    overflow: hidden;
+    margin-top: 6px;
+
+    &::before {
+        position: absolute;
+        content: "";
+        top: 0;
+        left: 0;
+        // background: #848484;
+        background: #49e12e !important;
+        width: var(--player-played);
+        height: 100%;
+        border-radius: 10px;
+        z-index: 2;
+        transition: all 0.3s ease;
+    }
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: none;
+        outline: none;
+    }
+
+}

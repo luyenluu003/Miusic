@@ -19,32 +19,32 @@ const UserNavigationPanel = () => {
       className="absolute right-0 z-50"
       transition={{ duration: 0.2 }}
     >
-      <div className="bg-white absolute right-0 border border-grey w-60  duration-200">
-        <Link to="/editor" className="flex gap-2 link md:hidden pl-8 py-4">
+      <div className="bg-[#403D51] absolute right-0  rounded-2xl border-grey w-60  duration-200">
+        <Link to="/editor" className="flex gap-2 link md:hidden pl-8 py-4 text-white">
           <i className="fi fi-rr-file-edit"></i>
           <p>Write</p>
         </Link>
 
-        <Link to={`/user/${username}`} className="link pl-8 py-4">
+        <Link to={`/user/${username}`} className="link pl-8 py-4 rounded-2xl text-white">
           Profile
         </Link>
 
-        <Link to="/dasdboard/blogs" className="link pl-8 py-4">
+        <Link to="/dasdboard/blogs" className="link pl-8 py-4 text-white">
           Dashboard
         </Link>
 
-        <Link to="/settings/edit-profile" className="link pl-8 py-4">
+        <Link to="/settings/edit-profile" className="link pl-8 py-4 text-white">
           Settings
         </Link>
 
-        <span className="absolute border-t border-grey ml-6 w-[100%]"></span>
+        <span className="absolute border-t ml-3 border-[#53BDFA] w-[90%]"></span>
 
         <button
-          className="text-left p-4 hover:bg-grey w-full pl-8 py-4"
+          className="text-left p-4 rounded-2xl text-white hover:bg-grey hover:text-black w-full pl-8 py-4"
           onClick={signOutUser}
         >
-          <h1 className="font-bold text-xl mg-1">Sign Out</h1>
-          <p className="text-dark-grey">@{username}</p>
+          <h1 className="font-bold text-xl mg-1 ">Sign Out</h1>
+          <p className="text-[#ccc] hover:text-dark-grey">@{username}</p>
         </button>
       </div>
     </AnimationWrapper>

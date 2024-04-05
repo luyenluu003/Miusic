@@ -41,12 +41,10 @@ const UserAuthForm = ({ type }) => {
         .post(import.meta.env.VITE_SERVER_DOMAIN + route, formData)
         .then(({ data }) => {
           if (!data.isEmailExist) {
-            console.log("isEmailExist", data.isEmailExist);
             storeInSession("user", JSON.stringify(data));
             setUserAuth(data);
             navigate("/sendotp", { state: { serverRoute, formData } });
           } else {
-            console.log("isEmailExist", data.isEmailExist);
             toast.error(
               "The Email was registered. Please sign up for another email !"
             );

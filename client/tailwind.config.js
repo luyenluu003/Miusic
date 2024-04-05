@@ -14,6 +14,7 @@ export default {
       gray: "#1E1C2A",
       "gray-dark": "#403D51",
       "blue-gwen": "#2D6691",
+      "colorcard":"#252836",
     },
 
     fontSize: {
@@ -24,7 +25,10 @@ export default {
       "3xl": "28px",
       "4xl": "38px",
       "5xl": "50px",
+      "738px":"738px",
+      "191px":"191px",
     },
+    
 
     extend: {
       fontFamily: {
@@ -35,8 +39,19 @@ export default {
         "gray-900": "#1E1C2A",
         "gray-dark": "#403D51",
         "blue-800": "#2D6691 ",
+        "color-card":"#252836",
+      },
+      width: {
+        '738px': '738px',
+        '189px':'189px',
+      },
+      height: {
+        '161px': '161px',
+        '123px':'123px',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar-hide')
+  ],
 };

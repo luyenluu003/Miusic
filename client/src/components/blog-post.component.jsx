@@ -1,0 +1,102 @@
+import { Link } from "react-router-dom"
+import { getDay } from "../common/date"
+import PlayMusic from "./play-music.component"
+import { useEffect, useRef, useState } from "react"
+
+const BlogPostCard = ({ content, author, onClick }) => {
+    let { publishedAt, tags, title, des, banner, music, activity: { total_likes, total_comments, total_reads }, blog_id: id } = content
+    let { fullname, profile_img, username } = author
+    const audioPlayer = useRef(new Audio())
+    const [duration,setDuration] = useState(0)
+    
+
+    const toggleHearts = (showicon, hideicon) => {
+        document.getElementById(showicon).style.display = 'inline-block'
+        document.getElementById(hideicon).style.display = 'none'
+    }
+
+    useEffect(() => {
+        if (music) {
+            const newAudioPlayer = new Audio(music);
+            audioPlayer.current = newAudioPlayer;
+            audioPlayer.current.addEventListener("loadedmetadata", () => {
+                const seconds = Math.floor(audioPlayer.current.duration);
+                setDuration(seconds);
+                console.log()
+            });
+        }    
+    }, [music]);
+
+    const CalculateTime = (sec) => {
+        const minutes = Math.floor(sec / 60);
+        //10 or -> 09 or 11,12
+        const returnMin = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        const seconds = Math.floor(sec % 60);
+        const returnSec = seconds < 10 ? `0${seconds}` : `${seconds}`;
+        return `${returnMin}:${returnSec}`;
+    };
+
+
+
+
+    return (
+        // <Link to={`/blog/${id}`} className="flex gap-8 items-center">
+        <>
+            <div className="w-full" >
+                <div className="flex md:card w-full bg-colorcard m-2 p-2 md:m-6 md:p-8 rounded-xl " onClick={onClick}>
+                    <div className="flex items-center relative">
+                        <img src={banner} className=" w-20 h-20 md:ml-0 mr-9 md:w-189px md:h-123px rounded-xl" />
+                        <p className="text-gray-dark line-clamp-2 bg-dark-grey text-xs font-extralight absolute bottom-3 right-3"> {duration && !isNaN(duration) && CalculateTime(duration)
+                                                    ? CalculateTime(duration)
+                                                    : "00:00"}</p>
+                    </div>
+                    <div className="w-full flex flex-col pl-5">
+                        <div className="flex w-full justify-between ">
+                            <p className="text-xl md:leading-5 text-white font-bold line-clamp-1">{title}</p>
+                            <i id="heartrs" className="fi fi-rs-heart w-6 h-6 text-white" onClick={() => toggleHearts('heartrs', 'heartss')}></i>
+                            <i id="heartss" className="fi fi-ss-heart w-6 h-6 text-white hidden" onClick={() => toggleHearts('heartss', 'heartrs')}></i>
+                        </div>
+                        <div className="flex md:gap-5">
+                            <div className="md:flex md:gap-4 gap-1 flex  ">
+                                <span className="flex items-center md:gap-2 text-dark-grey line-clamp-1">
+                                    <i className="fi fi-rs-eye mt-[4px]"></i>
+                                    {total_reads} views
+                                </span>
+                            </div>
+                            <div className="flex gap-4 ">
+                                <span className="flex items-center gap-2 text-dark-grey line-clamp-1">
+                                    <i className="fi fi-rs-heart mt-[4px]"></i>
+                                    {total_likes} likes
+                                </span>
+                            </div>
+                            <div className="flex gap-4 ">
+                                <span className="flex items-center gap-2 text-dark-grey line-clamp-1">
+                                    <i className="fi fi-rs-comment-dots mt-[4px]"></i>
+                                    {total_comments} comments
+                                </span>
+                            </div>
+                            <span className="btn-light py-1 px-4 md:flex hidden">{tags[0]}</span>
+                        </div>
+                        <div className="flex gap-3 mt-4 relative" >
+                            <div className="flex items-center">
+                                <img src={profile_img} className="w-9 h-9 rounded-full" />
+                            </div>
+                            <div className="flex  flex-col justify-start ">
+                                <p className="line-clamp-1  text-dark-grey font-light leading-2  ">{fullname}</p>
+                                <p className="line-clamp-1 text-dark-grey font-light leading-2">{getDay(publishedAt)}</p>
+                            </div>
+                            <span className="ml-auto btn-light  py-1 px-4 md:hidden hidden">{tags[0]}</span>
+                            <Link to={`/blog/${id}`}  className="btn-blue-gwen p-2  md:py-3 md:px-6 right-1 absolute">
+                                Xem thêm
+                            </Link>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </>
+        // </Link >
+    )
+}
+
+export default BlogPostCard;

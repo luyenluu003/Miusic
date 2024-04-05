@@ -14,8 +14,12 @@ import crypto from "crypto";
 import multer from "multer";
 //schema below
 import User from "./Schema/User.js";
+import Blog from "./Schema/Blog.js";
 
 import { memoryStorage } from "multer";
+import Notification from "./Schema/Notification.js";
+import Comment from './Schema/Comment.js'
+
 const storage = memoryStorage();
 const upload = multer({ storage });
 
@@ -84,6 +88,23 @@ const generateUploadAudioURL = async () => {
 //     });
 //   });
 // };
+
+
+const verifyJWT = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token === null) {
+    return res.status(401).json({ error: 'No access token' })
+  }
+
+  jwt.verify(token, process.env.SECRET_ACCESS_KEY, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'Access token is invalid ' })
+    }
+    req.user = user.id
+    next()
+  })
+}
 
 const formatDatatoSend = (user) => {
   const access_token = jwt.sign(
@@ -419,6 +440,296 @@ server.post("/verify-code", (req, res) => {
     res.status(200).send({ error: response });
   }
 });
+
+server.post("/create-blog", verifyJWT, (req, res) => {
+  let authorId = req.user;
+  let { title, des, banner, music, tags, content, draft,id } = req.body;
+  if (!title.length) {
+    return res
+      .status(403)
+      .json({ error: "You must provide a title to publish the post" });
+  }
+  if (!draft) {
+    if (!des.length || des.length > 10000) {
+      return res.status(403).json({
+        error: "You must provide post description under 10000 characters",
+      });
+    }
+    if (!banner.length) {
+      return res
+        .status(403)
+        .json({ error: "You must provide post banner to publish it" });
+    }
+    if (!music.length) {
+      return res
+        .status(403)
+        .json({ error: "You must provide post music to publish it" });
+    }
+    if (!content.blocks.length) {
+      return res
+        .status(403)
+        .json({ error: "There must be some post content to publish it" });
+    }
+    if (!tags.length || tags.length > 10) {
+      return res.status(403).json({
+        error: "Provide tags in order to publish the post, Maxiumum 10 tags",
+      });
+    }
+  }
+
+  tags = tags.map((tag) => tag.toLowerCase());
+  let blog_id = id ||title.replace(/[^a-zA-Z0-9]/g, " ").replace(/\s+/g, "-").trim() + nanoid();
+  if(id){
+    Blog.findOneAndUpdate({blog_id},{title,des,banner,music,content,tags, draft:draft ? draft:false})
+    .then(() =>{
+      return res.status(200).json({id:blog_id})
+    })
+    .catch(err =>{
+      return res.status(500).json({error:"Failed to update total posts number"})
+    })
+  }else{
+    let blog = new Blog({
+      title,
+      des,
+      banner,
+      music,
+      content,
+      tags,
+      author: authorId,
+      blog_id,
+      draft: Boolean(draft),
+    });
+  
+    blog
+      .save()
+      .then((blog) => {
+        let incrementVal = draft ? 0 : 1;
+        User.findOneAndUpdate(
+          { _id: authorId },
+          {
+            $inc: { "account_info.total_posts": incrementVal },
+            $push: { blogs: blog._id },
+          }
+        )
+          .then((user) => {
+            return res.status(200).json({ id: blog.blog_id });
+          })
+          .catch((err) => {
+            return res
+              .status(500)
+              .json({ error: "Failed to update total post number" });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: err.message });
+      });
+  }
+
+  
+});
+
+server.get("/latest-blogs", (req, res) => {
+  // let maxLimit = 5
+  Blog.find({ draft: false })
+    .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")
+    .sort({ "publishedAt": -1 })
+    .select("blog_id title des banner music activity tags publishedAt -_id")
+    // .limit(maxLimit)
+    .then(blogs => {
+      return res.status(200).json({ blogs })
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message })
+    })
+})
+
+server.post("/search-users",(req,res)=>{
+  let {query} = req.body
+  User.find({"personal_info.username": new RegExp(query,'i')})
+  .limit(50)
+  .select("personal_info.fullname personal_info.username personal_info.profile_img -_id")
+  .then(users =>{
+    return res.status(200).json({users})
+  })
+  .catch(err=>{
+    return res.status(500).json({error:err.message})
+  })
+})
+
+server.post("/get-profile",(req,res)=>{
+  let {username} = req.body;
+  User.findOne({"personal_info.username":username})
+  .select("-personal_info.password -google_auth -updateAt -blogs")
+  .then(user =>{
+    return res.status(200).json(user)
+  })
+  .catch(err =>{
+    console.log(err);
+    return res.status(500).json({err:err.message})
+  })
+})
+
+
+server.post("/all-latest-blogs-count",(req,res) =>{
+  Blog.countDocuments({draft:false})
+  .then(count =>{
+    return res.status(200).json({totalDocs:count})
+  })
+  .catch(err =>{
+    console.log(err.message)
+    return res.status(500).json({err:err.message})
+  })
+})
+
+server.post("/search-blogs",(req,res) =>{
+  let {tag,query,author,page} = req.body
+  let findQuery ;
+
+  if(tag){
+    findQuery = {tags:tag,draft:false}
+  }else if(query){
+    findQuery = {draft:false,title: new RegExp(query, "i") } 
+  }else if(author){
+    findQuery = {author, draft:false}
+  }
+
+  // let maxLimit = 2
+
+  Blog.find(findQuery).populate("author","personal_info.profile_img personal_info.username personal_info.fullname -_id")
+  .sort({"publishedAt":-1})
+  .select("blog_id title des banner music activity tags publishedAt -_id")
+  // .skip((page-1)*maxLimit)
+  // .limit(maxLimit)
+  .then(blogs => {
+    return res.status(200).json({blogs})
+  })
+  .catch((err) => {
+    return res.status(500).json({error:err.message})
+  })
+})
+
+server.post("/search-blogs-count",(req,res) =>{
+  let {tag,author,query} = req.body
+
+  let findQuery 
+  if(tag){
+    findQuery = {tags:tag,draft:false}
+  }else if(query){
+    findQuery = {draft:false,title: new RegExp(query, "i") } 
+  }else if(author){
+    findQuery = {author, draft:false}
+  }
+  Blog.countDocuments(findQuery)
+  .then(count =>{
+    return res.status(200).json({totalDocs:count})
+  })
+  .catch(err =>{
+    console.log(err.message)
+    return res.status(500).json({err:err.message})
+  })
+})
+
+server.post("/get-blog",(req,res)=>{
+  let {blog_id,draft,mode} = req.body;
+  let incrementVal=mode != 'edit' ? 1:0;
+  Blog.findOneAndUpdate({blog_id},{$inc:{"activity.total_reads":incrementVal}})
+  .populate("author","personal_info.fullname personal_info.username personal_info.profile_img")
+  .select("title des content banner music activity publishedAt blog_id tags")
+  .then(blog=>{
+    User.findOneAndUpdate({"personal_info.username":blog.author.personal_info.username},{
+      $inc:{"account_info.total_reads":incrementVal}
+    })
+    .catch(err =>{
+      return res.status(500).json({error:"you can not access draft blogs"})
+    })
+    if(blog.draft && !draft){
+      return res.status(500).json({blog})
+    }
+    return res.status(200).json({blog});
+  })
+  .catch(err =>{
+    return res.status(500).json({error:err.message})
+  })
+})
+
+server.post("/like-blog",verifyJWT,(req,res)=>{
+  let user_id = req.user;
+  let {_id,islikedByUser } = req.body;
+
+  let incrementVal = !islikedByUser ? 1 : -1;
+
+  Blog.findOneAndUpdate({_id},{ $inc: { "activity.total_likes": incrementVal } })
+  .then(blog =>{
+    if(!islikedByUser){
+      let like = new Notification({
+        type:"like",
+        blog:_id,
+        notification_for:blog.author,
+        user:user_id
+      })
+
+      like.save().then(notification=>{
+        return res.status(200).json({liked_by_user:true})
+      })
+    }else{
+      Notification.findOneAndDelete({user:user_id,blog:_id, type:"like"})
+      .then(data =>{
+        return res.status(200).json({liked_by_user:false})
+      }).catch(err =>{
+        return res.status(500).json({error:err.message})
+      })
+    }
+  })
+
+})
+
+server.post("/isliked-by-user",verifyJWT,(req,res)=>{
+  let user_id = req.user;
+  let {_id} = req.body
+
+  Notification.exists({user:user_id, type:"like",blog:_id})
+  .then(result =>{
+    return res.status(200).json({result})
+  }).catch(err =>{
+    return res.status(500).json({error:err.message})
+  })
+})
+
+
+// Comment
+server.post("/add-comment",verifyJWT,(req,res)=>{
+  let user_id = req.user;
+  let { _id,comment,blog_author } = req.body;
+  if(!comment.length){
+    return res.status(403).json({error:"Write something to leave a comment!"})
+  }
+  //Tạo tài liệu để bình luận
+  let commentObj = new Comment( {
+    blog_id:_id,blog_author,comment,commented_by:user_id ,
+  })
+  commentObj.save().then(commentFile=>{
+    let {comment,commentedAt,children} = commentFile
+
+    Blog.findOneAndUpdate({_id},{$push:{"comments":commentFile._id},$inc:{"activity.total_comments":1},"activity.total_parent_comments":1}).then(blog=>{
+      console.log("New comment created")
+    })
+
+    let notificationObj = {
+      type:"comment",
+      blog:_id,
+      notification_for:blog_author,
+      user:user_id,
+      comment:commentFile._id
+    }
+
+    new Notification(notificationObj).save().then(notification =>{
+      console.log("new notificaion created")
+    })
+
+    return res.status(200).json({comment,commentedAt,_id:commentFile._id,user_id,children})
+  })
+})
+
 server.listen(PORT, () => {
   console.log("Listening on port -> " + PORT);
 });
