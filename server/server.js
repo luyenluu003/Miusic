@@ -718,7 +718,7 @@ server.post("/add-comment",verifyJWT,(req,res)=>{
   new Comment(commentObj).save().then(async commentFile=>{
     let {comment,commentedAt,children} = commentFile
 
-    Blog.findOneAndUpdate({_id},{$push:{"comments":commentFile._id},$inc:{"activity.total_comments":1,"activity.total_parent_comments": replying_to? 0: 1}}).then(blog=>{
+    Blog.findOneAndUpdate({_id},{$push:{"comments":commentFile._id},$inc:{"activity.total_comments":1,"activity.total_parent_comments": replying_to ? 0: 1}}).then(blog=>{
       console.log("New comment created")  
     })
 
@@ -773,7 +773,7 @@ server.post("/get-replies",(req,res)=>{
   Comment.findOne({_id})
   .populate({
     path:"children",
-    option:{
+    options:{
       limit:maxLimit,
       skip:skip,
       sort:{
@@ -784,7 +784,7 @@ server.post("/get-replies",(req,res)=>{
       path:"commented_by",
       select:"personal_info.profile_img personal_info.fullname personal_info.username "
     },
-    select:"-blog_id -updateAt"
+    select:"-blog_id -updatedAt"
 
   })
   .select("children")
