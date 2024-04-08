@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { getDay } from "../common/date"
 import PlayMusic from "./play-music.component"
 import { useEffect, useRef, useState } from "react"
+import  axios  from "axios";
 
 const BlogPostCard = ({ content, author, onClick }) => {
     let { publishedAt, tags, title, des, banner, music, activity: { total_likes, total_comments, total_reads }, blog_id: id } = content
