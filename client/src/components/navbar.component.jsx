@@ -35,7 +35,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar ">
+      <nav className="navbar z-50 ">
         <Link to="/" className="flex-none w-10">
           <img src={testlogo} className="w-full" />
         </Link>
@@ -57,10 +57,10 @@ const Navbar = () => {
 
         <div className="flex items-center gap-3 md:gap-6 ml-auto">
           <button
-            className="md-hidden bg-grey w-12 h-12 rounded-full flex items-center justify-center"
+            className="md:hidden bg-grey w-12 h-12 rounded-full flex items-center justify-center"
             onClick={() => setSearchBoxVisibility((currentVal) => !currentVal)}
           >
-            <i className="fi fi-rr-search text-xl "></i>
+            <i className="fi fi-rr-search text-xl  "></i>
           </button>
 
           <Link to="/editor" className="hidden md:flex gap-2 link-blue-gwen">

@@ -92,8 +92,16 @@
     @apply flex gap-4 items-center py-5 text-dark-grey hover:text-black;
   }
 
+  .sidebar-link-gwen{
+    @apply flex gap-4 items-center py-5 text-dark-grey hover:text-blue-gwen;
+  }
+
   .sidebar-link.active {
     @apply text-black border-r-2 border-black pl-6 bg-grey/50 -ml-6 md:rounded-tl-lg md:rounded-bl-lg max-md:border-none;
+  }
+
+  .sidebar-link-gwen.active {
+    @apply text-white border-r-2 border-blue-gwen pl-6 bg-blue-gwen/50 -ml-6 md:rounded-tl-lg md:rounded-bl-lg max-md:border-none;
   }
 
   #textEditor h2,

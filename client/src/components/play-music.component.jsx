@@ -144,8 +144,8 @@ const PlayMusic = ({ selectedBlog }) => {
             {
                 selectedBlog ? (
                     <>
-                        <div className="fixed bottom-0 left-0 w-full bg-gray-900 md:p-8 flex h-[64px] cursor-pointer">
-                            <div className="w-[15%] h-80% flex items-center  ">
+                        <div className="fixed bottom-0 left-0 w-full bg-gray-900 md:p-8 flex h-[64px] cursor-pointer p-1 ">
+                            <div className="hidden md:flex w-[15%] h-80%  items-center  ">
                                 {selectedBlog ? (
                                     <>
                                         <img className="w-14 h-14 rounded-xl overflow-x-hidden	" src={selectedBlog.banner} />
@@ -155,7 +155,7 @@ const PlayMusic = ({ selectedBlog }) => {
                                         </div></>
                                 ) : null}
                             </div>
-                            <div className="w-[61%]  flex items-center flex-col justify-center mt-2 relative">
+                            <div className="md:w-[61%] w-full  flex items-center flex-col justify-center mt-2 relative">
                                 {selectedBlog ? (
                                     <>
                                         <audio
@@ -165,7 +165,7 @@ const PlayMusic = ({ selectedBlog }) => {
                                             onLoadedMetadata={onLoadedMetadata}
                                             onTimeUpdate={onTimeUpdate}
                                         />
-                                        <div className="flex w-full justify-between text-[#fff] cursor-pointer items-center mt-4  absolute bottom-[-15px]">
+                                        <div className="flex w-full justify-around md:justify-between text-[#fff] cursor-pointer items-center mt-4  absolute bottom-[-15px]">
                                             <div className="cursor-pointer text-xl">
                                                 <i className="fi fi-rr-shuffle"></i>
                                             </div>
@@ -173,7 +173,7 @@ const PlayMusic = ({ selectedBlog }) => {
                                                 <div className="text-xl">
                                                     <i className="fi fi-bs-angle-left mr-1"></i>
                                                 </div>
-                                                <div className="text-xl overflow-hidden  mt-3" onClick={changePlayPause}>
+                                                <div className="text-xl overflow-hidden mt-3" onClick={changePlayPause}>
                                                     {isPlaying ? (
                                                         <i className="fi fi-ss-pause-circle  text-3xl"></i>
                                                     ) : (

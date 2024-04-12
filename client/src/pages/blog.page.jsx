@@ -220,7 +220,7 @@ const BlogPage = () => {
                                     <>
                                         <div className="w-full h-[90%] flex flex-row bg-gray-dark rounded-xl">
                                             <div className="w-[20%]">
-                                                <img src={banner} className=" rounded-xl" />
+                                                <img src={banner} className=" rounded-l-xl" />
                                             </div>
                                             <div className="w-[80%]">
                                                 <div className="flex flex-row border-b-[1px] p-4 border-blue-gwen ">
