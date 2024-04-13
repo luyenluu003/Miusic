@@ -96,7 +96,6 @@ const EditProfile = () => {
         if(bio.length >bioLimit){
             return toast.error(`Bio should not be more than ${bioLimit}`)
         }
-        console.log(facebook)
 
         let loadingToast =toast.loading("Updating...");
         e.target.setAttribute("disabled",true)

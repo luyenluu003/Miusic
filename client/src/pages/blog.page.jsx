@@ -219,10 +219,10 @@ const BlogPage = () => {
                                 {
                                     <>
                                         <div className="w-full h-[90%] flex flex-row bg-gray-dark rounded-xl">
-                                            <div className="w-[20%]">
+                                            <div className="w-[20%] hidden md:block">
                                                 <img src={banner} className=" rounded-l-xl" />
                                             </div>
-                                            <div className="w-[80%]">
+                                            <div className="w-full md:w-[80%] relative">
                                                 <div className="flex flex-row border-b-[1px] p-4 border-blue-gwen ">
                                                     <div className=" flex gap-5 items-start">
                                                         <img src={profile_img} className="w-14 h-14 rounded-full" />
@@ -241,7 +241,7 @@ const BlogPage = () => {
                                                         <p className="font-normal mt-2 text-[16px] text-[#ffffff] leading-5 ml-5" style={{ whiteSpace: 'pre-line' }}>{des}</p>
                                                     </div>
                                                 </div>
-                                                <div className="flex flex-row mt-3">
+                                                <div className="flex flex-row mt-3 absolute w-full bottom-0">
                                                     <div className="w-48 h-60 relative">
                                                         <img src={banner} />
                                                         <div className="absolute h-[40%] flex bg-[#3F95D7] w-full bottom-0 bg-opacity-60 cursor-pointer text-center items-center text-xl justify-around text-white">
@@ -266,9 +266,9 @@ const BlogPage = () => {
                                                             <BlogInteraction />
                                                         </div>
                                                         <div className="w-full h-[50%] bg-[#3F95D7] rounded-br-xl p-4 relative">                              
-                                                            <span className="text-white overflow-hidden text-ellipsis whitespace-nowrap text-xl ">{title}</span>
-                                                            <div className="flex justify-around w-full mb-8 absolute bottom-1">
-                                                                <div className="text-[#f1f1f1] text-[12px] font-bold ">
+                                                            <span className="text-white overflow-hidden text-ellipsis whitespace-nowrap text-xl line-clamp-1 max-w-48 md:w-full ">{title}</span>
+                                                            <div className="flex justify-around w-full mb-8 absolute bottom-1 left-0">
+                                                                <div className="text-[#f1f1f1] text-[12px] font-bold  hidden md:block">
                                                                     {CalculateTime(currentTime)}
                                                                 </div>
                                                                 <input type="range"
@@ -276,8 +276,8 @@ const BlogPage = () => {
                                                                     onChange={changeProgress}
                                                                     min={0}
                                                                     max={duration}
-                                                                    step={1} className=" progresBar w-[78%] relative h-1 outline-none appearance-none rounded-xl bg-dark-grey cursor-pointer overflow-hidden mt-[6px] " />
-                                                                <div className="text-[#f1f1f1] text-[12px] font-bold">
+                                                                    step={1} className=" progresBar w-[90%] md:w-[78%] relative h-1 outline-none appearance-none rounded-xl bg-dark-grey cursor-pointer overflow-hidden mt-[6px] " />
+                                                                <div className="text-[#f1f1f1] text-[12px] font-bold hidden md:block">
                                                                     {duration && !isNaN(duration) && CalculateTime(duration)
                                                                         ? CalculateTime(duration)
                                                                         : "00:00"}
