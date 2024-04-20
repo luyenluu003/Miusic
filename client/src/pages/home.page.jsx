@@ -52,12 +52,16 @@ const HomePage = () => {
                                     })
                             }
                         </>
-                        <h3 className="text-white">Hi</h3>
+                        <FriendPage />
 
                     </InPageNavigation>
                 </div>
                 {/* righthome */}
-                <FriendPage />
+                <div className="min-w-[22%] lg:min-w[400px] max-w-min border-1 border-grey pl-8 max-md:hidden text-white mt-8"> 
+                    <div className="w-full fixed">
+                        <FriendPage />
+                    </div>  
+                </div>
             </div>
             <PlayMusic selectedBlog={selectedBlog} />
         </div >

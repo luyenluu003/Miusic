@@ -66,10 +66,6 @@ const SideNav = () => {
                             </div>
                             Notification
                         </NavLink>
-                        <NavLink to="/dashboard/blogs" onClick={(e)=>setPageState(e.target.innerText)} className="sidebar-link-gwen">
-                            <i className="fi fi-rr-file-edit"></i>
-                            Write
-                        </NavLink>
 
                         <h1 className="text-xl text-blue-gwen mt-20 mb-3">Settings</h1>
                         <hr className="border-blue-gwen -ml-6 mb-8 mr-6"/>

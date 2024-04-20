@@ -643,6 +643,30 @@ server.get("/latest-blogs", (req, res) => {
     })
 })
 
+server.get("/get-users", (req, res) => {
+  User.find({})
+  .select("personal_info.profile_img personal_info.username personal_info.fullname -_id")
+  .then(users =>{
+    return res.status(200).json({users})
+  })
+  .catch(err =>{
+    return res.status(500).json({error:err.message})
+  })
+})
+
+server.get("/view-arrange-user",(req,res)=>{
+  let maxLimit= 6;
+  User.find({})
+  .sort({"account_info.total_reads":-1})
+  .select("personal_info.profile_img personal_info.username -_id")
+  .limit(maxLimit)
+  .then(users =>{
+    return res.status(200).json({users})
+  })
+  .catch(err =>{
+    return res.status(500).json({error:err.message})
+  })
+})
 server.post("/search-users",(req,res)=>{
   let {query} = req.body
   User.find({"personal_info.username": new RegExp(query,'i')})
@@ -799,7 +823,7 @@ server.post("/isliked-by-user",verifyJWT,(req,res)=>{
 // Comment
 server.post("/add-comment",verifyJWT,(req,res)=>{
   let user_id = req.user;
-  let { _id,comment,blog_author ,replying_to} = req.body;
+  let { _id,comment,blog_author ,replying_to,notification_id} = req.body;
   if(!comment.length){
     return res.status(403).json({error:"Write something to leave a comment!"})
   }
@@ -833,7 +857,10 @@ server.post("/add-comment",verifyJWT,(req,res)=>{
       await Comment.findOneAndUpdate({_id:replying_to},{$push:{ children:commentFile._id}})
       .then(replyingToCommentDoc=>{notificationObj.notification_for = replyingToCommentDoc.commented_by})
 
-      
+      if(notification_id){
+        Notification.findOneAndUpdate({_id:notification_id},{reply:commentFile._id})
+        .then(notification=>console.log("notification updated"))
+      }
     }
 
     new Notification(notificationObj).save().then(notification =>{
@@ -908,7 +935,7 @@ const deleteComments = (_id) =>{
 
     Notification.findOneAndDelete({comment:_id}).then(notification=>console.log('comment notification deleted'))
 
-    Notification.findOneAndDelete({reply:_id}).then(notification=>console.log('reply notification deleted'))
+    Notification.findOneAndUpdate({reply:_id},{$unset:{reply:1}}).then(notification=>console.log('reply notification deleted'))
 
     Blog.findOneAndUpdate({_id:comment.blog_id},{$pull:{comments:_id},$inc:{"activity.total_comments": -1},"activity.total_parent_comments": comment.parent ? 0: -1})
     .then(blog =>{
@@ -986,6 +1013,10 @@ server.post("/notifications",verifyJWT,(req,res)=>{
   .sort({createdAt:-1})
   .select("createdAt type seen reply")
   .then(notifications =>{
+    Notification.updateMany(findQuery,{seen:true})
+    .skip(skipDocs)
+    .limit(maxLimit)
+    .then(()=>console.log('notification seen'))
     return res.status(200).json({notifications})
   })
   .catch(err =>{
@@ -1006,6 +1037,60 @@ server.post("/all-notifications-count",verifyJWT,(req,res)=>{
   Notification.countDocuments(findQuery)
   .then(count =>{
     return res.status(200).json({totalDocs:count})
+  })
+  .catch(err=>{
+    return res.status(500).json({error:err.message})
+  })
+})
+
+server.post("/user-written-blogs",verifyJWT,(req,res)=>{
+  let user_id = req.user
+  let {page,draft,query,deletedDocCount} = req.body
+
+  let maxLimit = 5;
+  let skipDocs = (page-1) * maxLimit ;
+  if(deletedDocCount){
+    skipDocs -= deletedDocCount;
+  }
+
+  Blog.find({author:user_id,draft,title:new RegExp(query,'i')})
+  .skip(skipDocs)
+  .limit(maxLimit)
+  .sort({publishedAt:-1})
+  .select('title banner publishedAt blog_id activity des draft -_id ')
+  .then(blogs=>{
+    return res.status(200).json({blogs})
+  })
+  .catch(err =>{
+    return res.status(500).json({error:err.message})
+  })
+})
+
+server.post("/user-written-blogs-count",verifyJWT,(req,res)=>{
+  let user_id=  req.user;
+  let {draft, query} = req.body
+
+  Blog.countDocuments({author:user_id,draft,title:new RegExp(query,'i')})
+  .then(count=>{
+    return res.status(200).json({totalDocs:count})
+  })
+  .catch(errr=>{
+    console.log(err.message)
+    return res.status(500).json({error:err.message})
+  })
+})
+
+server.post("/delete-blog",verifyJWT,(req,res)=>{
+  let user_id = req.user
+  let { blog_id} = req.body
+  Blog.findOneAndDelete({blog_id})
+  .then(blog=>{
+    Notification.deleteMany({blog:blog._id}).then(data=>console.log("notifications deleted"))
+    Comment.deleteMany({blog_id:blog._id}).then(data=>console.log("comment deleted"))
+
+    User.findOneAndUpdate({_id:user_id},{$pull:{blog:blog._id},$inc:{"account_info.total_posts":-1}})
+    .then(user=>  console.log('blog deleted'))
+    return res.status(200).json({status:'done'})
   })
   .catch(err=>{
     return res.status(500).json({error:err.message})

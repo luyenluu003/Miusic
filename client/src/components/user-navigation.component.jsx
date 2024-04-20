@@ -29,9 +29,6 @@ const UserNavigationPanel = () => {
           Profile
         </Link>
 
-        <Link to="/dasdboard/blogs" className="link pl-8 py-4 text-white">
-          Dashboard
-        </Link>
 
         <Link to="/settings/edit-profile" className="link pl-8 py-4 text-white">
           Settings
