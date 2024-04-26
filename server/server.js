@@ -106,21 +106,20 @@ const verifyJWT = (req, res, next) => {
       return res.status(403).json({ error: 'Access token is invalid ' })
     }
     req.user = user.id
+    req.admin=user.admin
     next()
   })
 }
 
 const formatDatatoSend = (user) => {
-  const access_token = jwt.sign(
-    { id: user._id },
-    process.env.SECRET_ACCESS_KEY
-  );
+  const access_token = jwt.sign({ id: user._id , admin: user.admin},process.env.SECRET_ACCESS_KEY);
 
   return {
     access_token,
     profile_img: user.personal_info.profile_img,
     username: user.personal_info.username,
     fullname: user.personal_info.fullname,
+    isAdmin:user.admin
   };
 };
 
@@ -196,6 +195,7 @@ server.post("/signup", (req, res) => {
 
     let user = new User({
       personal_info: { fullname, email, password: hashed_password, username },
+      admin: false,
     });
 
     user

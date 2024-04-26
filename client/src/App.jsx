@@ -16,6 +16,7 @@ import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.pages";
 import Notifications from "./pages/notifications";
 import ManageBlogs from "./pages/manage-blogs";
+import RoleGuard from "./components/RoleGuard";
 
 export const UserContext = createContext({});
 
@@ -29,6 +30,9 @@ const App = () => {
       ? setUserAuth(JSON.parse(userInSession))
       : setUserAuth({ accsess_token: null });
   }, []);
+
+
+
 
   return (
     <UserContext.Provider value={{ userAuth, setUserAuth }}>
@@ -53,6 +57,9 @@ const App = () => {
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />}/>
         </Route>
+        <Route element={<RoleGuard allowedRoles={["admin"]} />}>
+            <Route path="/admin" element={<><h1>hello admin</h1></>} /> 
+          </Route>
       </Routes>
     </UserContext.Provider>
   );

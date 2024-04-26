@@ -22,8 +22,10 @@ const UserAuthForm = ({ type }) => {
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
       .then(({ data }) => {
+        console.log('data',data)
         storeInSession("user", JSON.stringify(data));
         setUserAuth(data);
+
       })
       .catch(({ response }) => {
         toast.error(response.data.error);
@@ -57,8 +59,14 @@ const UserAuthForm = ({ type }) => {
       axios
         .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
         .then(({ data }) => {
+          console.log("data",data)
           storeInSession("user", JSON.stringify(data));
           setUserAuth(data);
+          if (data.isAdmin) {
+            navigate('/admin'); 
+          } else {
+            navigate("/");
+          }
         })
         .catch(({ response }) => {
           toast.error(response.data.error);

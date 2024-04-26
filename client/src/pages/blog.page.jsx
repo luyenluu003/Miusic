@@ -17,8 +17,19 @@ export const blogStructure = {
     music: '',
     tag: [],
     author: { personal_info: {} },
+    activity: { total_likes: 0, total_comments: 0, total_reads: 0 },
     banner: '',
     publishedAt: '',
+}
+
+const formatViews = (number) =>{
+    if (number >= 1000000) {
+        return (number / 1000000).toFixed(1) + 'm'; 
+    } else if (number >= 1000) {
+        return (number / 1000).toFixed(1) + 'k'; 
+    } else {
+        return number.toString();
+    }
 }
 
 export const BlogContext  = createContext({})
@@ -37,7 +48,7 @@ const BlogPage = () => {
 
 
 
-    let { title, content, banner, des, music, author: { personal_info: { fullname, username, profile_img } }, publishedAt } = blog
+    let { title, content, banner, des, music, author: { personal_info: { fullname, username, profile_img } },activity:{total_reads}, publishedAt } = blog
 
     const fetchBlog = () => {
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog", { blog_id })
@@ -195,6 +206,8 @@ const BlogPage = () => {
         );
     };
 
+    const views = formatViews(total_reads)
+
     return (
         <AnimationWrapper>
             {   
@@ -232,6 +245,7 @@ const BlogPage = () => {
                                                             <Link to={`/user/${username}`} className="underline text-grey">{username}
                                                             </Link>
                                                         </p>
+                                                        <p className="text-white md:hidden">{views} views</p>
                                                     </div>
                                                     <p className="text-white opacity-90  ml-5 hidden md:inline-block">published on {getDay(publishedAt)}</p>
                                                 </div>

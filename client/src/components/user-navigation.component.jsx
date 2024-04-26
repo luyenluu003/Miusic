@@ -20,10 +20,6 @@ const UserNavigationPanel = () => {
       transition={{ duration: 0.2 }}
     >
       <div className="bg-[#403D51] absolute right-0  rounded-2xl border-grey w-60  duration-200">
-        <Link to="/editor" className="flex gap-2 link md:hidden pl-8 py-4 text-white">
-          <i className="fi fi-rr-file-edit"></i>
-          <p>Write</p>
-        </Link>
 
         <Link to={`/user/${username}`} className="link pl-8 py-4 rounded-2xl text-white">
           Profile

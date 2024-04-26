@@ -144,7 +144,7 @@ const PlayMusic = ({ selectedBlog }) => {
             {
                 selectedBlog ? (
                     <>
-                        <div className="fixed bottom-0 left-0 w-full bg-gray-900 md:p-8 flex h-[64px] cursor-pointer p-1 ">
+                        <div className="fixed bottom-0 left-0 w-full bg-gray-900 md:p-8 flex h-[64px] cursor-pointer p-1 border-t-twitter bg- border-1 border-t md:border-none ">
                             <div className="hidden md:flex w-[15%] h-80%  items-center  ">
                                 {selectedBlog ? (
                                     <>

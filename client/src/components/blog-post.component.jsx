@@ -3,7 +3,15 @@ import { getDay } from "../common/date"
 import PlayMusic from "./play-music.component"
 import { useEffect, useRef, useState } from "react"
 import  axios  from "axios";
-
+const formatViews = (number) =>{
+    if (number >= 1000000) {
+        return (number / 1000000).toFixed(1) + 'm'; 
+    } else if (number >= 1000) {
+        return (number / 1000).toFixed(1) + 'k'; 
+    } else {
+        return number.toString();
+    }
+}
 const BlogPostCard = ({ content, author, onClick }) => {
     let { publishedAt, tags, title, des, banner, music, activity: { total_likes, total_comments, total_reads }, blog_id: id } = content
     let { fullname, profile_img, username } = author
@@ -38,7 +46,9 @@ const BlogPostCard = ({ content, author, onClick }) => {
     };
 
 
-
+    const views = formatViews(total_reads); 
+    const likes = formatViews(total_likes); 
+    const comments = formatViews(total_comments);
 
     return (
         // <Link to={`/blog/${id}`} className="flex gap-8 items-center">
@@ -57,23 +67,23 @@ const BlogPostCard = ({ content, author, onClick }) => {
                             <i id="heartrs" className="fi fi-rs-heart w-6 h-6 text-white" onClick={() => toggleHearts('heartrs', 'heartss')}></i>
                             <i id="heartss" className="fi fi-ss-heart w-6 h-6 text-white hidden" onClick={() => toggleHearts('heartss', 'heartrs')}></i>
                         </div>
-                        <div className="flex md:gap-5">
+                        <div className=" hidden md:flex md:gap-5">
                             <div className="md:flex md:gap-4 gap-1 flex  ">
                                 <span className="flex items-center md:gap-2 text-dark-grey line-clamp-1">
                                     <i className="fi fi-rs-eye mt-[4px]"></i>
-                                    {total_reads} views
+                                    {views} views
                                 </span>
                             </div>
                             <div className="flex gap-4 ">
                                 <span className="flex items-center gap-2 text-dark-grey line-clamp-1">
                                     <i className="fi fi-rs-heart mt-[4px]"></i>
-                                    {total_likes} likes
+                                    {likes} likes
                                 </span>
                             </div>
                             <div className="flex gap-4 ">
                                 <span className="flex items-center gap-2 text-dark-grey line-clamp-1">
                                     <i className="fi fi-rs-comment-dots mt-[4px]"></i>
-                                    {total_comments} comments
+                                    {comments} comments
                                 </span>
                             </div>
                             <span className="btn-light py-1 px-4 md:flex hidden">{tags[0]}</span>
