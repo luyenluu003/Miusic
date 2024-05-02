@@ -160,7 +160,7 @@ const PlayMusic = ({ selectedBlog }) => {
                                     <>
                                         <audio
                                             src={selectedBlog.music}
-                                            // preload="metadata"
+                                            preload="metadata"
                                             ref={audioPlayer}
                                             onLoadedMetadata={onLoadedMetadata}
                                             onTimeUpdate={onTimeUpdate}

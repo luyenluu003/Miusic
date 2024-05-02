@@ -4,7 +4,7 @@ import { UserContext } from "../App"
 
 const SideNav = () => {
 
-    let {userAuth:{access_token,new_notification_available} } = useContext(UserContext)
+    let {userAuth:{access_token,new_notification_available,isAdmin} } = useContext(UserContext)
     let page = location.pathname.split("/")[2]
     let [pageState,setPageState] = useState(page.replace("-"," "))
     let [showShideNav , setShowSideNav] = useState(false)
@@ -47,7 +47,33 @@ const SideNav = () => {
 
                         <hr ref={activeTabline} className="absolute bottom-0 duration-500"/>
                     </div>
-                    <div className={"min-w-[200px] h-[calc(100vh-80px-60px)]  md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-gray-dark md:border-r absolute max-md:top-[64px] bg-gray max-md:w-[calc(100%+80px)] max-md:px-16 max-md:-ml-7 duration-500 " + (!showShideNav ? "max-md:opacity-0 max-md:pointer-events-none":"opacity-100 pointer-events-auto" )}>
+                    <div className={"min-w-[200px] h-[calc(100vh-80px-60px)]  md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-gray-dark md:border-r absolute max-md:top-[64px] bg-gray max-md:w-[calc(100%+80px)] max-md:px-16 max-md:-ml-7 duration-500 " + (!showShideNav ? "max-md:opacity-0 max-md:pointer-events-none":"opacity-100 pointer-events-auto" )} style={{ scrollbarWidth: "none" }}>
+                        {
+                            isAdmin ?
+                            <>
+                                <h1 className="text-xl text-blue-gwen mb-3">Admin</h1>
+                                <hr className="border-blue-gwen -ml-6 mb-8 mr-6"/>
+
+                                <NavLink to="/admin/users"  onClick={(e)=>setPageState(e.target.innerText)}  className="sidebar-link-gwen">
+                                    <i className="fi fi-rr-user"></i>
+                                    Users
+                                </NavLink>
+                                <NavLink to="/admin/allblogs"  onClick={(e)=>setPageState(e.target.innerText)}  className="sidebar-link-gwen">
+                                    <i className="fi fi-rr-document"></i>
+                                    All blogs
+                                </NavLink>
+                                <NavLink to="/admin/tableUsers"  onClick={(e)=>setPageState(e.target.innerText)}  className="sidebar-link-gwen">
+                                    <i className="fi fi-rr-table"></i>
+                                    Table Users
+                                </NavLink>
+                                <NavLink to="/admin/tableBlogs"  onClick={(e)=>setPageState(e.target.innerText)}  className="sidebar-link-gwen mb-4">
+                                    <i className="fi fi-rr-table"></i>
+                                    Table Blogs
+                                </NavLink>
+                                </>
+                            :""
+                        }
+                        
                         <h1 className="text-xl text-blue-gwen mb-3">Dashboard</h1>
                         <hr className="border-blue-gwen -ml-6 mb-8 mr-6"/>
 

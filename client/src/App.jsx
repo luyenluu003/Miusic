@@ -6,7 +6,6 @@ import { lookInSession } from "./common/session";
 import Editor from "./pages/editor.pages";
 import SendOtp from "./pages/otp.page";
 import HomePage from "./pages/home.page";
-import PlayMusic from "./components/play-music.component";
 import SearchPage from "./pages/search.page";
 import PageNotFound from "./pages/404.page";
 import ProfilePage from "./pages/profile.page";
@@ -16,7 +15,11 @@ import ChangePassword from "./pages/change-password.page";
 import EditProfile from "./pages/edit-profile.pages";
 import Notifications from "./pages/notifications";
 import ManageBlogs from "./pages/manage-blogs";
-import RoleGuard from "./components/RoleGuard";
+import AdminUsers from "./pages/admin.users";
+import TableAdmin from "./pages/admintable.components";
+import AdminAllBlogs from "./pages/adminAllBlogs.components";
+import TableBlogsAdmin from "./pages/adminTable.blogs.pages";
+import TrenDing from "./pages/trending.page";
 
 export const UserContext = createContext({});
 
@@ -30,6 +33,7 @@ const App = () => {
       ? setUserAuth(JSON.parse(userInSession))
       : setUserAuth({ accsess_token: null });
   }, []);
+  
 
 
 
@@ -41,9 +45,16 @@ const App = () => {
         <Route path="/editor/:blog_id" element={<Editor />} />
         <Route path="/" element={<Navbar />}>
           <Route index element={<HomePage />} />
+          <Route path="/trending" element={<TrenDing />} />
           <Route path="dashboard" element={<SideNav />}>
             <Route path="blogs" element= {<ManageBlogs />} />
             <Route path="notifications" element= {<Notifications />} />
+          </Route>
+          <Route path="admin" element={<SideNav />}>
+            <Route path="users" element= {<AdminUsers />} />
+            <Route path="allblogs" element= {<AdminAllBlogs />} />
+            <Route path="tableUsers" element= {<TableAdmin />} />
+            <Route path="tableBlogs" element= {<TableBlogsAdmin />} />
           </Route>
           <Route path="settings" element={<SideNav />}>
             <Route path="edit-profile" element= {<EditProfile />} />
@@ -57,9 +68,6 @@ const App = () => {
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />}/>
         </Route>
-        <Route element={<RoleGuard allowedRoles={["admin"]} />}>
-            <Route path="/admin" element={<><h1>hello admin</h1></>} /> 
-          </Route>
       </Routes>
     </UserContext.Provider>
   );

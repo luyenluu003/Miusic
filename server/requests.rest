@@ -1,11 +1,10 @@
 
-POST http://localhost:3000/user-written-blogs
+POST http://localhost:3000/api/registrants/last7days
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjBlZDVjNTY2ZTE4MjFiNDc2NjRlYiIsImlhdCI6MTcxMzUxMjIxM30.Bs7d6NuES0NBpVPSCesFnl_Yh2R1FkRShSyS9oXrfx8
 Content-Type: application/json
 
 {
-    "page":1,
-    "draft":false
+   
 
 }
 

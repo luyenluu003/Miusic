@@ -6,7 +6,7 @@ import { removeFromSession } from "../common/session";
 
 const UserNavigationPanel = () => {
   const {
-    userAuth: { username },
+    userAuth: { username ,isAdmin},
     setUserAuth,
   } = useContext(UserContext);
 
@@ -20,6 +20,7 @@ const UserNavigationPanel = () => {
       transition={{ duration: 0.2 }}
     >
       <div className="bg-[#403D51] absolute right-0  rounded-2xl border-grey w-60  duration-200">
+
 
         <Link to={`/user/${username}`} className="link pl-8 py-4 rounded-2xl text-white">
           Profile

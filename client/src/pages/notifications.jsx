@@ -62,7 +62,7 @@ const Notifications = () => {
         <div>
             <h1 className="max-md:hidden text-blue-gwen">Recent Notifications</h1>
 
-            <div className="my-8 flex gap-3">
+            <div className="my-8 flex gap-1">
                 {
                     filters.map((filterName ,i)=>{
                         return <button className={" py-2 "+(filter== filterName ? 'btn-blue-gwen text-white':"btn-light text-black")} onClick={handleFilter} key={i}>{filterName}</button>

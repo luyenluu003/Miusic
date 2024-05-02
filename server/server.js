@@ -23,6 +23,7 @@ import { error } from "console";
 import path from "path";
 import { populate } from "dotenv";
 import e from "express";
+import moment from "moment";
 
 const storage = memoryStorage();
 const upload = multer({ storage });
@@ -428,7 +429,7 @@ const sendVerificationCode = (email) => {
   const mailOptions = {
     from: "violetbaka03@gmail.com",
     to: email,
-    subject: "Xác nhận code của Totmusica : ",
+    subject: "Xác nhận code của Miusic : ",
     text: `Mã xác nhận của bạn là: ${verificationCode}`,
   };
 
@@ -1096,6 +1097,187 @@ server.post("/delete-blog",verifyJWT,(req,res)=>{
     return res.status(500).json({error:err.message})
   })
 })
+
+
+// Trending
+// New albums
+server.get("/new-albums",(req,res)=>{
+  let maxLimit = 12
+  Blog.find({ draft: false })
+    .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")
+    .sort({ "publishedAt": -1 })
+    .select("blog_id title des banner music activity tags publishedAt -_id")
+    .limit(maxLimit)
+    .then(blogs => {
+      return res.status(200).json({ blogs })
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message })
+    })
+})
+server.get("/top-trending",(req,res)=>{
+  let maxLimit = 10
+  Blog.find({ draft: false })
+    .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")
+    .sort({ "total_reads": -1 })
+    .select("blog_id title des banner music activity tags publishedAt -_id")
+    .limit(maxLimit)
+    .then(blogs => {
+      return res.status(200).json({ blogs })
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.message })
+    })
+})
+
+// admin
+server.post("/admin-get-all-users",(req,res)=>{
+
+  User.find()
+  .select("-password -admin")
+  .then((users)=>{
+    return res.status(200).json({users})
+  })
+  .catch(err=>{
+    return res.status(500).json({error:err.message})
+  })
+  
+})
+
+server.post("/admin-get-all-blogs",(req,res)=>{
+
+  Blog.find()
+  .select("-_id")
+  .then((blogs)=>{
+    return res.status(200).json({blogs})
+  })
+  .catch(err=>{
+    return res.status(500).json({error:err.message})
+  })
+})
+
+server.post("/search-user-admin",(req,res)=>{
+  let {query} = req.body
+  User.find({"personal_info.username": new RegExp(query,'i')})
+  .limit(50)
+  .select("-password -admin")
+  .then(user =>{
+    return res.status(200).json({user})
+  })
+  .catch(err=>{
+    return res.status(500).json({error:err.message})
+  })
+})
+server.post("/search-blog-admin",(req,res)=>{
+  let {query} = req.body
+  Blog.find({"title": new RegExp(query,'i')})
+  .select("-blog_id")
+  .limit(50)
+  .then(blog =>{
+    return res.status(200).json({blog})
+  })
+  .catch(err=>{
+    return res.status(500).json({error:err.message})
+  })
+})
+server.post("/registers7days", async (req, res) => {
+  try {
+    const today = moment().endOf("day");
+    const last7Days = today.clone().subtract(7, "days");
+
+    const result = await User.aggregate([
+      {
+        $match: {
+          joinedAt: { $gte: last7Days.toDate(), $lte: today.toDate() }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$joinedAt" },
+            month: { $month: "$joinedAt" },
+            day: { $dayOfMonth: "$joinedAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          date: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: {
+                $dateFromParts: {
+                  year: "$_id.year",
+                  month: "$_id.month",
+                  day: "$_id.day"
+                }
+              }
+            }
+          },
+          count: 1
+        }
+      },
+      {
+        $sort: { date: 1 } 
+      }
+    ]);
+    console.log("result", result);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+server.post("/registersblogs7days", async (req, res) => {
+  try {
+    const today = moment().endOf("day");
+    const last7Days = today.clone().subtract(7, "days");
+
+    const result = await Blog.aggregate([
+      {
+        $match: {
+          publishedAt: { $gte: last7Days.toDate(), $lte: today.toDate() }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$publishedAt" },
+            month: { $month: "$publishedAt" },
+            day: { $dayOfMonth: "$publishedAt" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          date: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: {
+                $dateFromParts: {
+                  year: "$_id.year",
+                  month: "$_id.month",
+                  day: "$_id.day"
+                }
+              }
+            }
+          },
+          count: 1
+        }
+      },
+      {
+        $sort: { date: 1 } 
+      }
+    ]);
+    console.log("result", result);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 server.listen(PORT, () => {
   console.log("Listening on port -> " + PORT);

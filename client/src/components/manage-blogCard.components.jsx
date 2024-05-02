@@ -29,7 +29,6 @@ export const ManagePublishedBlogCard = ({blog}) => {
     const [selectedBlog,setSelectedBlog] = useState(null)
 
     const handleBlogCardClick = (blogData) => {
-        console.log("check")
         setSelectedBlog(blogData);
     }
     return (

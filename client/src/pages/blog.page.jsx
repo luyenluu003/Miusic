@@ -84,8 +84,7 @@ const BlogPage = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
     const [isUserInteracted, setIsUserInteracted] = useState(false); // Cờ tương tác của người dùng
-    const [isRepeatClicked, setIsRepeatClicked] = useState(false); // click vào repeat
-    const [israndomClicked, setIsRandomClicked] = useState(false); // click vào random
+
 
     const progressBar = useRef();
     const animationRef = useRef();
@@ -94,18 +93,13 @@ const BlogPage = () => {
 
     useEffect(() => {
         if (music) {
-            // Dừng bài hát hiện tại nếu đang phát
             if (isPlaying) {
                 audioPlayer.current.pause();
                 setPlaying(false);
                 cancelAnimationFrame(animationRef.current);
-            }
-
-            // Đặt lại thời gian hiện tại và giá trị của thanh tiến trình về 0
+            }    
             setCurrentTime(0);
             progressBar.current.value = 0;
-
-            // Thiết lập bài hát mới cho audio player
             const newAudioPlayer = new Audio(music);
             audioPlayer.current = newAudioPlayer;
             audioPlayer.current.addEventListener("loadedmetadata", () => {
@@ -169,7 +163,6 @@ const BlogPage = () => {
         return `${returnMin}:${returnSec}`;
     };
 
-    // //sử dụng để liên tục cập nhập thanh tiếng trình
     const whilePlaying = () => {
         if (audioPlayer.current) {
             progressBar.current.value = audioPlayer.current.currentTime;
@@ -177,13 +170,13 @@ const BlogPage = () => {
             animationRef.current = requestAnimationFrame(whilePlaying);
         }
     };
-    // //xử lý khi thanh tiến trình thay đổi người dùng bấm vào
+
     const changeProgress = () => {
         audioPlayer.current.currentTime = progressBar.current.value;
         changeCurrenTime();
     };
 
-    //cập nhập thời gian với thanh tiếng trình
+
     const changeCurrenTime = () => {
         progressBar.current.style.setProperty(
             "--player-played",
@@ -197,7 +190,7 @@ const BlogPage = () => {
         setDuration(seconds);
         progressBar.current.max = seconds;
     };
-    //gọi dữ liệu file âm thanh đồng bộ hóa tiền trình thanh phát
+
     const onTimeUpdate = () => {
         setCurrentTime(audioPlayer.current.currentTime);
         progressBar.current.style.setProperty(
@@ -222,7 +215,7 @@ const BlogPage = () => {
                         <div className="w-full" >
                                     <audio
                                             src={music}
-                                            // preload="metadata"
+                                            preload="metadata"
                                             ref={audioPlayer}
                                             onLoadedMetadata={onLoadedMetadata}
                                             onTimeUpdate={onTimeUpdate}
