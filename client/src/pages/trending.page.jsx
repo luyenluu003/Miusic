@@ -24,7 +24,7 @@ const TrenDing = () => {
     const fetchNewAlBums = () => {
         axios.get(import.meta.env.VITE_SERVER_DOMAIN + "/new-albums")
             .then(({ data }) => {
-                
+
                 setNewAlbums(data.blogs)
             })
             .catch(err => {
@@ -52,7 +52,7 @@ const TrenDing = () => {
         setSelectedBlog(blogData);
     };
 
-    
+
 
 
 
@@ -66,47 +66,28 @@ const TrenDing = () => {
                     <InPageNavigation routes={['menu', 'trending', 'friends']} defaultHidden={["menu", 'trending', 'friends']}>
                         {/* <h2 className="text-white ">Where are you going :D</h2> */}
                         <div className="ml-10">
-                            <div className="max-w-[10%] flex flex-col">
-                                <p className="text-[#3D3B4A] font-bold leading-6 size-4 text-center">MENU</p>
-                                <Link to='/' className="flex w-full mt-5 cursor-pointer  ">
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-sr-home text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Home</p>
+                            <div className="max-w-[10%] flex flex-col space-y-10">
+                                <p className="text-white/80 font-bold leading-6 size-4 text-center">MENU</p>
+                                <Link to={"/"} className="flex w-full mt-5 cursor-pointer">
+                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-sr-home text-[lightgray] hover:text-white"></i></div>
+                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Home</p>
                                 </Link>
-                                <Link to='/trending' className="flex w-full mt-5 cursor-pointer  ">
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-ss-flame text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Trending</p>
+                                <Link to={"/trending"} className="flex w-full mt-5 cursor-pointer  ">
+                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-ss-flame text-[lightgray] hover:text-white"></i></div>
+                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Trending</p>
                                 </Link>
                                 <Link to={`/user/${username}`} className="flex w-full mt-5 cursor-pointer  ">
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-sr-rectangle-list text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Profile</p>
+                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-sr-rectangle-list text-[lightgray] hover:text-white"></i></div>
+                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Playlist</p>
                                 </Link>
-                                <Link to='/editor' className="flex w-full mt-5 cursor-pointer  ">
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi fi-sr-blog-text text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Post</p>
+                                <Link to={"editor"} className="flex w-full mt-5 cursor-pointer  ">
+                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi fi-sr-blog-text text-[lightgray] hover:text-white"></i></div>
+                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Post</p>
                                 </Link>
-                                <div className="flex w-full mt-5 cursor-pointer  ">
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-rr-book-bookmark text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Bookmark</p>
-                                </div>
-                            </div>
-                            <div className="max-w-[10%] flex flex-col mt-8 border-b-[3px] border-t-[3px] border-[#262631]">
-                                <p className="text-[#3D3B4A] font-bold leading-6 size-4 mt-5 text-center">CATEGORY</p>
-                                <Link to='/' className="flex w-full mt-5 cursor-pointer  " >
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-ss-users-medical text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Community</p>
+                                <Link to={"/rules"} className="flex w-full mt-5 cursor-pointer  ">
+                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-rs-credit-card text-[lightgray] hover:text-white"></i></div>
+                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Support</p>
                                 </Link>
-                                <div className="flex w-full mt-5 cursor-pointer  ">
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-rs-credit-card text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Turturial</p>
-                                </div>
-                                <div className="flex w-full mt-5 cursor-pointer  ">
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-rs-comment-dots text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Message</p>
-                                </div>
-                                <div className="flex w-full mt-5 cursor-pointer mb-5  ">
-                                    <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-sr-home text-white"></i></div>
-                                    <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-[#3D3B4A] focus:text-[#3F95D7] hover:text-[#3F95D7]">Feedback</p>
-                                </div>
                             </div>
                         </div>
                         <>
@@ -143,7 +124,7 @@ const TrenDing = () => {
                                                 trendingBlogs == null ? <Loader /> :
                                                     trendingBlogs.map((blog, i) => {
                                                         return <div transition={{ duration: 1, delay: i * .1 }} key={i}>
-                                                            <div className="flex  w-full bg-colorcard m-2 p-2 md:m-6 md:p-8 rounded-xl relative hover:scale-105 ease-in-out duration-75"  onClick={() => handleBlogCardClick(blog)} >
+                                                            <div className="flex  w-full bg-colorcard m-2 p-2 md:m-6 md:p-8 rounded-xl relative hover:scale-105 ease-in-out duration-75" onClick={() => handleBlogCardClick(blog)} >
                                                                 <h1 className="text-[#3A3D4A] text-3xl mr-2">{i + 1}</h1>
                                                                 <div className="flex flex-row gap-4">
                                                                     <img src={blog.banner} className="rounded-xl w-24 h-24" />
@@ -152,7 +133,7 @@ const TrenDing = () => {
                                                                             <p className="text-white text-2xl line-clamp-1 ">{blog.title}</p>
                                                                         </Link>\
                                                                         <Link to={`/user/${blog.author.personal_info.username}`}>
-                                                                            <p className="text-white/60 text-xl line-clamp-1 k">{blog.author.personal_info.username}</p>
+                                                                            <p className="text-white/60 text-xl line-clamp-1 hidden md:block">{blog.author.personal_info.username}</p>
                                                                         </Link>
                                                                     </div>
 
@@ -175,8 +156,7 @@ const TrenDing = () => {
                                                                         <p className="text-white/80 text-sm text-center">{blog.activity.total_comments}</p>
                                                                     </div>
                                                                     <Link to={`/blog/${blog.blog_id}`}  >
-                                                                    <button class="btn-blue-gwen p-2  md:py-3 md:px-6  mr-2" >See more</button>
-
+                                                                        <button class="btn-blue-gwen p-2  md:py-3 md:px-6  mr-2" >See more</button>
                                                                     </Link>
 
                                                                 </div>

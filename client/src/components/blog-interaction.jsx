@@ -72,19 +72,19 @@ const BlogInteraction = () => {
         <Toaster />
             <div className="flex gap-6 justify-between p-5 bottom-0 absolute w-full">
                 <div className="flex gap-3 items-center">
-                        <button className="w-8 h-8 rounded-full flex items-center justify-center leading-[0px] bg-grey/80">
+                        <button className="w-8 h-8 rounded-full  items-center justify-center leading-[0px] bg-grey/80 md:flex hidden">
                             <i className="fi fi-rr-eye"></i>
                         </button>
-                        <p className="text-xl text-white/80">{total_reads}</p>
+                        <p className="text-xl text-white/80 md:block hidden">{views}</p>
                         <button onClick={handleLike} 
                             className={"w-8 h-8 rounded-full flex items-center justify-center leading-[0px] " +(islikedByUser ? "bg-white text-red":"bg-grey/80")} >
                             <i className={"fi "+(islikedByUser?"fi-sr-heart":"fi-rr-heart")}></i>
                         </button>
-                        <p className="text-xl text-white/80">{total_likes}</p>
+                        <p className="text-xl text-white/80">{likes}</p>
                         <button className="w-8 h-8 rounded-full flex items-center justify-center leading-[0px] bg-grey/80" onClick={()=>setCommentsWrapper(preVal => !preVal)}  >
                             <i className="fi fi-rr-comment-dots" ></i>
                         </button>
-                        <p className="text-xl text-white/80">{total_comments}</p>
+                        <p className="text-xl text-white/80">{comments}</p>
                     </div>
                         
                 <div className="flex gap-6 items-center justify-between">

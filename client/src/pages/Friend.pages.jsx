@@ -60,7 +60,7 @@ const FriendPage = () =>{
                 </div>
                 
                 <div className="f-full md:max-w-[20%] flex flex-col bg-[#252836] rounded-xl p-4 mt-4 max-h-[40vh] ">
-                    <h4 className="ml-4 font-medium text-[16px] text-[#ffffff]">Friends</h4>
+                    <h4 className="ml-4 font-medium text-[16px] text-[#ffffff]">Users</h4>
                     <div className="flex flex-col overflow-auto "  style={{ scrollbarWidth: "none" }}>
                         <>
                         {

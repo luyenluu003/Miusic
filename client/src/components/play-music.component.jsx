@@ -234,7 +234,7 @@ const PlayMusic = ({ selectedBlog }) => {
                                     </>
                                 ) : null}
                             </div >
-                            <div className="volumeControl   flex items-center mg-2 ml-20 border-none mt-5">
+                            <div className="volumeControl hidden  md:flex items-center mg-2 ml-20 border-none mt-5">
                                 <i class="fi fi-rr-volume [color:#fff] mt-[5px] rounded-[50px] border-none w-[50px] text-xl " onClick={handleToggleVolume}  ></i>
                                 <input
                                     type="range"

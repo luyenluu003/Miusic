@@ -67,10 +67,10 @@ const BlogPostCard = ({ content, author, onClick }) => {
                             <i id="heartrs" className="fi fi-rs-heart w-6 h-6 text-white" onClick={() => toggleHearts('heartrs', 'heartss')}></i>
                             <i id="heartss" className="fi fi-ss-heart w-6 h-6 text-white hidden" onClick={() => toggleHearts('heartss', 'heartrs')}></i>
                         </div>
-                        <div className=" hidden md:flex md:gap-5">
+                        <div className=" md:flex md:gap-5">
                             <div className="md:flex md:gap-4 gap-1 flex  ">
                                 <span className="flex items-center md:gap-2 text-dark-grey line-clamp-1">
-                                    <i className="fi fi-rs-eye mt-[4px]"></i>
+                                    <i className="fi fi-rs-eye mt-[4px] mr-2 md:mr-0"></i>
                                     {views} views
                                 </span>
                             </div>
@@ -93,11 +93,11 @@ const BlogPostCard = ({ content, author, onClick }) => {
                                 <img src={profile_img} className="w-9 h-9 rounded-full" />
                             </div>
                             <div className="flex  flex-col justify-start ">
-                                <p className="line-clamp-1  text-dark-grey font-light leading-2  ">{fullname}</p>
-                                <p className="line-clamp-1 text-dark-grey font-light leading-2">{getDay(publishedAt)}</p>
+                                <p className="line-clamp-1  text-dark-grey font-light leading-2 hidden md:block ">{fullname}</p>
+                                <p className="line-clamp-1 text-dark-grey font-light leading-2 hidden md:block">{getDay(publishedAt)}</p>
                             </div>
-                            <span className="ml-auto btn-light  py-1 px-4 md:hidden hidden">{tags[0]}</span>
-                            <Link to={`/blog/${id}`}  className="btn-blue-gwen p-2  md:py-3 md:px-6 right-1 absolute">
+                          
+                            <Link to={`/blog/${id}`}  className="btn-blue-gwen p-2  md:py-3 md:px-6 right-1 absolute ">
                                 See more
                             </Link>
                         </div>

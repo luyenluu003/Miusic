@@ -21,25 +21,25 @@ export const blogStructure = {
     publishedAt: '',
 }
 
-const formatViews = (number) =>{
+const formatViews = (number) => {
     if (number >= 1000000) {
-        return (number / 1000000).toFixed(1) + 'm'; 
+        return (number / 1000000).toFixed(1) + 'm';
     } else if (number >= 1000) {
-        return (number / 1000).toFixed(1) + 'k'; 
+        return (number / 1000).toFixed(1) + 'k';
     } else {
         return number.toString();
     }
 }
 
-export const BlogContext  = createContext({})
+export const BlogContext = createContext({})
 
 const BlogPage = () => {
     let { blog_id } = useParams();
     const [blog, setBlog] = useState(blogStructure)
     const [loading, setLoading] = useState(true)
-    const [islikedByUser , setLikedByUser] = useState(false)
-    const [commentsWrapper,setCommentsWrapper] = useState(false)
-    const [totalParentCommentsLoaded,setTotalParentCommentsLoaded] = useState(0)
+    const [islikedByUser, setLikedByUser] = useState(false)
+    const [commentsWrapper, setCommentsWrapper] = useState(false)
+    const [totalParentCommentsLoaded, setTotalParentCommentsLoaded] = useState(0)
 
 
 
@@ -47,13 +47,12 @@ const BlogPage = () => {
 
 
 
-    let { title, content, banner, des, music, author: { personal_info: { fullname, username, profile_img } },activity:{total_reads}, publishedAt } = blog
+    let { title, content, banner, des, music, author: { personal_info: { fullname, username, profile_img } }, activity: { total_reads }, publishedAt } = blog
 
     const fetchBlog = () => {
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog", { blog_id })
-            .then(async ({ data: { blog } }) => 
-            {
-                blog.comments= await fetchComments({blog_id:blog._id,setParentCommentCountFun:setTotalParentCommentsLoaded})
+            .then(async ({ data: { blog } }) => {
+                blog.comments = await fetchComments({ blog_id: blog._id, setParentCommentCountFun: setTotalParentCommentsLoaded })
                 setBlog(blog)
                 setLoading(false)
             })
@@ -67,7 +66,7 @@ const BlogPage = () => {
         fetchBlog()
     }, [])
 
-    const resetStates=()=>{
+    const resetStates = () => {
         setBlog(blogStructure);
         setLoading(true);
         setLikedByUser(false)
@@ -96,7 +95,7 @@ const BlogPage = () => {
                 audioPlayer.current.pause();
                 setPlaying(false);
                 cancelAnimationFrame(animationRef.current);
-            }    
+            }
             setCurrentTime(0);
             progressBar.current.value = 0;
             const newAudioPlayer = new Audio(music);
@@ -202,111 +201,135 @@ const BlogPage = () => {
 
     return (
         <AnimationWrapper>
-            {   
-            
+            {
+
                 loading ? <Loader /> :
-                <BlogContext.Provider value={{blog,setBlog,islikedByUser,setLikedByUser,commentsWrapper,setCommentsWrapper,totalParentCommentsLoaded,setTotalParentCommentsLoaded}}>
-                    <CommentsContainer />
-                    <div className="py-4 px-[5vw] md:px-[7vw] lg:px-[4vw] flex h-cover  justify-center gap-10 bg-gray ">
-                        <MenuHome />
+                    <BlogContext.Provider value={{ blog, setBlog, islikedByUser, setLikedByUser, commentsWrapper, setCommentsWrapper, totalParentCommentsLoaded, setTotalParentCommentsLoaded }}>
+                        <CommentsContainer />
+                        <div className="py-4 px-[5vw] md:px-[7vw] lg:px-[4vw] flex h-cover  justify-center gap-10 bg-gray ">
+                            <MenuHome />
 
-                        {/* home */}
-                        <div className="w-full" >
-                                    <audio
-                                            src={music}
-                                            preload="metadata"
-                                            ref={audioPlayer}
-                                            onLoadedMetadata={onLoadedMetadata}
-                                            onTimeUpdate={onTimeUpdate}
-                                        />  
-                            <InPageNavigation routes={['menu', 'blogpage']} defaultHidden={["menu", 'blogpage']}>
-                                <h1 className="text-white">Menu home</h1>
-                                {
-                                    <>
-                                        <div className="w-full h-[90%] flex flex-row bg-gray-dark rounded-xl">
-                                            <div className="w-[20%] hidden md:block">
-                                                <img src={banner} className=" rounded-l-xl" />
-                                            </div>
-                                            <div className="w-full md:w-[80%] relative">
-                                                <div className="flex flex-row border-b-[1px] p-4 border-blue-gwen ">
-                                                    <div className=" flex gap-5 items-start">
-                                                        <img src={profile_img} className="w-14 h-14 rounded-full" />
-                                                        <p className="text-white capitalize">{fullname}
-                                                            <br />
-                                                            @
-                                                            <Link to={`/user/${username}`} className="underline text-grey">{username}
-                                                            </Link>
-                                                        </p>
-                                                        <p className="text-white md:hidden">{views} views</p>
-                                                    </div>
-                                                    <p className="text-white opacity-90  ml-5 hidden md:inline-block">published on {getDay(publishedAt)}</p>
+                            {/* home */}
+                            <div className="w-full" >
+                                <audio
+                                    src={music}
+                                    preload="metadata"
+                                    ref={audioPlayer}
+                                    onLoadedMetadata={onLoadedMetadata}
+                                    onTimeUpdate={onTimeUpdate}
+                                />
+                                <InPageNavigation routes={['menu', 'blogpage']} defaultHidden={["menu", 'blogpage']}>
+                                    <div className="ml-10">
+                                        <div className="max-w-[10%] flex flex-col space-y-10">
+                                            <p className="text-white/80 font-bold leading-6 size-4 text-center">MENU</p>
+                                            <Link to={"/"} className="flex w-full mt-5 cursor-pointer">
+                                                <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-sr-home text-[lightgray] hover:text-white"></i></div>
+                                                <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Home</p>
+                                            </Link>
+                                            <Link to={"/trending"} className="flex w-full mt-5 cursor-pointer  ">
+                                                <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-ss-flame text-[lightgray] hover:text-white"></i></div>
+                                                <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Trending</p>
+                                            </Link>
+                                            <Link to={`/user/${username}`} className="flex w-full mt-5 cursor-pointer  ">
+                                                <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-sr-rectangle-list text-[lightgray] hover:text-white"></i></div>
+                                                <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Playlist</p>
+                                            </Link>
+                                            <Link to={"editor"} className="flex w-full mt-5 cursor-pointer  ">
+                                                <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi fi-sr-blog-text text-[lightgray] hover:text-white"></i></div>
+                                                <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Post</p>
+                                            </Link>
+                                            <Link to={"/rules"} className="flex w-full mt-5 cursor-pointer  ">
+                                                <div className="min-w-8 min-h-8 text-center relative my-auto rounded-[10px] bg-[#353340] hover:bg-[#3F95D7]"><i class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fi fi-rs-credit-card text-[lightgray] hover:text-white"></i></div>
+                                                <p className="font-normal text-xl ml-10 text-center my-auto leading-6 text-white/80 focus:text-[#3F95D7] hover:text-[#3F95D7]">Support</p>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                    {
+                                        <>
+                                            <div className="w-full h-[90%] flex flex-row bg-gray-dark rounded-xl">
+                                                <div className="w-[20%] hidden md:block">
+                                                    <img src={banner} className=" rounded-l-xl" />
                                                 </div>
-                                                <div className="flex flex-col bg-[#252836] rounded-xl p-4 mt-4 mx-2 h-[31vh] ">
-                                                    <h4 className="ml-4 font-medium text-[16px] text-[#ffffff]">Lyric</h4>
-                                                    <div className="flex flex-col overflow-auto " style={{ scrollbarWidth: "none" }}>
-                                                        <p className="font-normal mt-2 text-[16px] text-[#ffffff] leading-5 ml-5" style={{ whiteSpace: 'pre-line' }}>{des}</p>
+                                                <div className="w-full md:w-[80%] relative">
+                                                    <div className="flex flex-row border-b-[1px] p-4 border-blue-gwen ">
+                                                        <div className=" flex gap-5 items-start">
+                                                            <img src={profile_img} className="w-14 h-14 rounded-full" />
+                                                            <p className="text-white capitalize">{fullname}
+                                                                <br />
+                                                                @
+                                                                <Link to={`/user/${username}`} className="underline text-grey">{username}
+                                                                </Link>
+                                                            </p>
+                                                            <p className="text-white md:hidden">{views} views</p>
+                                                        </div>
+                                                        <p className="text-white opacity-90  ml-5 hidden md:inline-block">published on {getDay(publishedAt)}</p>
                                                     </div>
-                                                </div>
-                                                <div className="flex flex-row mt-3 absolute w-full bottom-0">
-                                                    <div className="w-48 h-60 relative">
-                                                        <img src={banner} />
-                                                        <div className="absolute h-[40%] flex bg-[#3F95D7] w-full bottom-0 bg-opacity-60 cursor-pointer text-center items-center text-xl justify-around text-white">
-                                                            <div className="text-xl">
-                                                                <i class="fi fi-rr-arrow-circle-left text-2xl"></i>
-                                                            </div>
-                                                            <div className="text-xl overflow-hidden" onClick={changePlayPause}>
-                                                                {isPlaying ? (
-                                                                    <i className="fi fi-ss-pause-circle  text-3xl"></i>
-                                                                ) : (
-                                                                    <i className="fi fi-ss-play-circle  text-3xl"></i>
-
-                                                                )}
-                                                            </div>
-                                                            <div className="text-xl">
-                                                                <i class="fi fi-rr-arrow-circle-right text-2xl"></i>
-                                                            </div>
+                                                    <div className="flex flex-col bg-[#252836] rounded-xl p-4 mt-4 mx-2 h-[31vh] ">
+                                                        <h4 className="ml-4 font-medium text-[16px] text-[#ffffff]">Lyric</h4>
+                                                        <div className="flex flex-col overflow-auto " style={{ scrollbarWidth: "none" }}>
+                                                            <p className="font-normal mt-2 text-[16px] text-[#ffffff] leading-5 ml-5" style={{ whiteSpace: 'pre-line' }}>{des}</p>
                                                         </div>
                                                     </div>
-                                                    <div className="flex flex-col w-full ">
-                                                        <div className="w-full h-[50%] relative">
-                                                            <BlogInteraction />
-                                                        </div>
-                                                        <div className="w-full h-[50%] bg-[#3F95D7] rounded-br-xl p-4 relative">                              
-                                                            <span className="text-white overflow-hidden text-ellipsis whitespace-nowrap text-xl line-clamp-1 max-w-48 md:w-full ">{title}</span>
-                                                            <div className="flex justify-around w-full mb-8 absolute bottom-1 left-0">
-                                                                <div className="text-[#f1f1f1] text-[12px] font-bold  hidden md:block">
-                                                                    {CalculateTime(currentTime)}
+                                                    <div className="flex flex-row mt-3 absolute w-full bottom-0">
+                                                        <div className="w-48 h-60 relative">
+                                                            <img src={banner} className="rounded-bl-xl md:rounded-none" />
+                                                            <div className="absolute h-[40%] flex rounded-bl-xl md:rounded-none bg-[#3F95D7] w-full bottom-0 bg-opacity-60 cursor-pointer text-center items-center text-xl justify-around text-white">
+                                                                <div className="text-xl">
+                                                                    <i class="fi fi-rr-arrow-circle-left text-2xl"></i>
                                                                 </div>
-                                                                <input type="range"
-                                                                    ref={progressBar}
-                                                                    onChange={changeProgress}
-                                                                    min={0}
-                                                                    max={duration}
-                                                                    step={1} className="w-[78%] relative h-1 outline-none appearance-none rounded-xl bg-dark-grey cursor-pointer overflow-hidden mt-[6px] 
+                                                                <div className="text-xl overflow-hidden" onClick={changePlayPause}>
+                                                                    {isPlaying ? (
+                                                                        <i className="fi fi-ss-pause-circle  text-3xl"></i>
+                                                                    ) : (
+                                                                        <i className="fi fi-ss-play-circle  text-3xl"></i>
+
+                                                                    )}
+                                                                </div>
+                                                                <div className="text-xl">
+                                                                    <i class="fi fi-rr-arrow-circle-right text-2xl"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex flex-col w-full ">
+                                                            <div className="w-full h-[50%] relative">
+                                                                <BlogInteraction />
+                                                            </div>
+                                                            <div className="w-full h-[50%] bg-[#3F95D7] rounded-br-xl p-4 relative">
+                                                                <span className="text-white overflow-hidden text-ellipsis whitespace-nowrap text-xl line-clamp-1 max-w-48 md:w-full ">{title}</span>
+                                                                <div className="flex justify-around w-full mb-8 absolute bottom-1 left-0">
+                                                                    <div className="text-[#f1f1f1] text-[12px] font-bold  hidden md:block">
+                                                                        {CalculateTime(currentTime)}
+                                                                    </div>
+                                                                    <input type="range"
+                                                                        ref={progressBar}
+                                                                        onChange={changeProgress}
+                                                                        min={0}
+                                                                        max={duration}
+                                                                        step={1} className="w-[78%] relative h-1 outline-none appearance-none rounded-xl bg-dark-grey cursor-pointer overflow-hidden mt-[6px] 
                                                                     before:content-[''] before:absolute before:[left-0] before:[top-0] before:w-[var(--player-played)] before:h-full before:bg-[#f1f1f1]
                                                                     before:rounded-[10px] before:[z-index:2] before:[transition:all_0.3s_ease]
                                                                     [&::-webkit-slider-thumb]:[appearance:none] [&::-webkit-slider-thumb]:w-[15px] [&::-webkit-slider-thumb]:h-[15px]
                                                                     [&::-webkit-slider-thumb]:rounded-[50%] [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:outline-none" />
-                                                                <div className="text-[#f1f1f1] text-[12px] font-bold hidden md:block">
-                                                                    {duration && !isNaN(duration) && CalculateTime(duration)
-                                                                        ? CalculateTime(duration)
-                                                                        : "00:00"}
-                                                                </div>
+                                                                    <div className="text-[#f1f1f1] text-[12px] font-bold hidden md:block">
+                                                                        {duration && !isNaN(duration) && CalculateTime(duration)
+                                                                            ? CalculateTime(duration)
+                                                                            : "00:00"}
+                                                                    </div>
 
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </>
-                                }
+                                        </>
+                                    }
 
-                            </InPageNavigation>
+                                </InPageNavigation>
+                            </div>
+
                         </div>
-
-                    </div>
-                </BlogContext.Provider>
+                    </BlogContext.Provider>
             }
 
         </AnimationWrapper >
