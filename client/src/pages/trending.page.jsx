@@ -17,13 +17,14 @@ const TrenDing = () => {
 
     let [loading, setLoading] = useState(true)
     let [newAlBums, setNewAlbums] = useState(null)
+    let [trendingBlogs, setTrendingBlogs] = useState(null)
     const [selectedBlog, setSelectedBlog] = useState(null);
 
 
     const fetchNewAlBums = () => {
         axios.get(import.meta.env.VITE_SERVER_DOMAIN + "/new-albums")
             .then(({ data }) => {
-                console.log("data", data)
+                
                 setNewAlbums(data.blogs)
             })
             .catch(err => {
@@ -31,14 +32,27 @@ const TrenDing = () => {
             })
     }
 
+    const fetchNewTrendingBlogs = () => {
+        axios.get(import.meta.env.VITE_SERVER_DOMAIN + "/top-trending")
+            .then(({ data }) => {
+                console.log("data trending", data)
+                setTrendingBlogs(data.blogs)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+
     useEffect(() => {
-        console.log("newAlBums", newAlBums)
         fetchNewAlBums()
+        fetchNewTrendingBlogs()
     }, [])
 
     const handleBlogCardClick = (blogData) => {
         setSelectedBlog(blogData);
     };
+
+    
 
 
 
@@ -109,11 +123,11 @@ const TrenDing = () => {
                                                         <div className="p-2 mt-2 mb-2 w-36 flex flex-col cursor-pointer hover:scale-105 ease-in-out duration-100 rounded-xl hover:bg-blue-gwen focus:bg-blue-gwen">
                                                             <img src={album.banner} className="w-32 h-32  rounded-xl " onClick={() => handleBlogCardClick(album)} />
                                                             <Link to={`/blog/${album.blog_id}`}>
-                                                            <p className="text-white text-xl line-clamp-1 mt-2">{album.title}</p>
+                                                                <p className="text-white text-xl line-clamp-1 mt-2">{album.title}</p>
 
                                                             </Link>
                                                             <Link to={`/user/${album.author.personal_info.username}`}>
-                                                            <p className="text-white/70 text-sm line-clamp-1 mt-2">{album.author.personal_info.username}</p>
+                                                                <p className="text-white/70 text-sm line-clamp-1 mt-2">{album.author.personal_info.username}</p>
                                                             </Link>
                                                         </div>
                                                     </div>
@@ -123,26 +137,54 @@ const TrenDing = () => {
                                 </div>
                                 <div className="flex flex-col items-center md:items-start  ">
                                     <h1 className="text-white text-2xl mt-2  text-center">Top trending</h1>
-                                    <div className="flex flex-row items-center flex-wrap overflow-auto gap-2 text-center justify-center">
-                                        {
-                                            newAlBums == null ? <Loader />
-                                                :
-                                                newAlBums.map((album, i) => {
-                                                    return <div transition={{ duration: 1, delay: i * .1 }} key={i}>
+                                    <div className="flex flex-row w-full  flex-wrap  gap-2  justify-center">
+                                        <div className="w-full">
+                                            {
+                                                trendingBlogs == null ? <Loader /> :
+                                                    trendingBlogs.map((blog, i) => {
+                                                        return <div transition={{ duration: 1, delay: i * .1 }} key={i}>
+                                                            <div className="flex  w-full bg-colorcard m-2 p-2 md:m-6 md:p-8 rounded-xl relative hover:scale-105 ease-in-out duration-75"  onClick={() => handleBlogCardClick(blog)} >
+                                                                <h1 className="text-[#3A3D4A] text-3xl mr-2">{i + 1}</h1>
+                                                                <div className="flex flex-row gap-4">
+                                                                    <img src={blog.banner} className="rounded-xl w-24 h-24" />
+                                                                    <div className="flex flex-col">
+                                                                        <Link to={`/blog/${blog.blog_id}`}>
+                                                                            <p className="text-white text-2xl line-clamp-1 ">{blog.title}</p>
+                                                                        </Link>\
+                                                                        <Link to={`/user/${blog.author.personal_info.username}`}>
+                                                                            <p className="text-white/60 text-xl line-clamp-1 k">{blog.author.personal_info.username}</p>
+                                                                        </Link>
+                                                                    </div>
 
-                                                        <div className="p-2 mt-2 mb-2 w-36 flex flex-col cursor-pointer hover:scale-105 ease-in-out duration-100 rounded-xl hover:bg-blue-gwen focus:bg-blue-gwen">
-                                                            <img src={album.banner} className="w-32 h-32  rounded-xl " onClick={() => handleBlogCardClick(album)} />
-                                                            <Link to={`/blog/${album.blog_id}`}>
-                                                            <p className="text-white text-xl line-clamp-1 mt-2">{album.title}</p>
+                                                                </div>
+                                                                <div className="flex flex-row gap-10 justify-around absolute right-0 top-[35%]">
+                                                                    <div className=" flex-col justify-center ml-2 hidden xl:flex">
+                                                                        <span class="btn-light py-1 px-4 block">{blog.tags}</span>
 
-                                                            </Link>
-                                                            <Link to={`/user/${album.author.personal_info.username}`}>
-                                                            <p className="text-white/70 text-sm line-clamp-1 mt-2">{album.author.personal_info.username}</p>
-                                                            </Link>
+                                                                    </div>
+                                                                    <div className=" flex-col justify-center ml-2 hidden xl:flex">
+                                                                        <p className="text-white capitalize">views</p>
+                                                                        <p className="text-white/80 text-sm text-center">{blog.activity.total_reads}</p>
+                                                                    </div>
+                                                                    <div className="hidden xl:flex flex-col justify-center ml-2">
+                                                                        <p className="text-white capitalize">likes</p>
+                                                                        <p className="text-white/80 text-sm text-center">{blog.activity.total_likes}</p>
+                                                                    </div>
+                                                                    <div className="hidden xl:flex flex-col justify-center ml-2">
+                                                                        <p className="text-white capitalize">comments</p>
+                                                                        <p className="text-white/80 text-sm text-center">{blog.activity.total_comments}</p>
+                                                                    </div>
+                                                                    <Link to={`/blog/${blog.blog_id}`}  >
+                                                                    <button class="btn-blue-gwen p-2  md:py-3 md:px-6  mr-2" >See more</button>
+
+                                                                    </Link>
+
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                })
-                                        }
+                                                    })
+                                            }
+                                        </div>
                                     </div>
                                 </div>
 

@@ -1119,7 +1119,7 @@ server.get("/top-trending",(req,res)=>{
   let maxLimit = 10
   Blog.find({ draft: false })
     .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")
-    .sort({ "total_reads": -1 })
+    .sort({ "activity.total_reads": -1 })
     .select("blog_id title des banner music activity tags publishedAt -_id")
     .limit(maxLimit)
     .then(blogs => {

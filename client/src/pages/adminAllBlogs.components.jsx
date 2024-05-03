@@ -19,7 +19,6 @@ const AdminAllBlogs = () => {
     const fetChAllBlogs = () =>{
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/admin-get-all-blogs")
         .then(({data})=>{
-            console.log("data",data)
             setAllBlogs(data.blogs)
         })
         .catch(err=>{
@@ -30,7 +29,6 @@ const AdminAllBlogs = () => {
     const fetchBlog = () => {
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blog-admin", { query })
             .then(({ data: { blog } }) => {
-                console.log("blog:", blog); 
                 setAllBlogs(blog)
             })
     }
@@ -126,18 +124,18 @@ const AdminAllBlogs = () => {
                         )
                     })
                 }
-                <>
+                {/* <>
                             {
-                                blogs == null ? <Loader />
+                                allBlogs == null ? <Loader />
                                     :
-                                    blogs.map((blog, i) => {
+                                    allBlogs.map((blog, i) => {
                                         return <div transition={{ duration: 1, delay: i * .1 }} key={i}>
                                             <BlogPostCard content={blog} author={blog.author.personal_info} onClick={() => handleBlogCardClick(blog)} />
                                         </div>
 
                                     })
                             }
-                        </>
+                        </> */}
             <ModalBlog isVisible = {showMore} blog={currentBlog} onClose= {()=>setShowMore(false)} />
             
         </>

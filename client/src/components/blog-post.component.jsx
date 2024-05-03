@@ -98,7 +98,7 @@ const BlogPostCard = ({ content, author, onClick }) => {
                             </div>
                             <span className="ml-auto btn-light  py-1 px-4 md:hidden hidden">{tags[0]}</span>
                             <Link to={`/blog/${id}`}  className="btn-blue-gwen p-2  md:py-3 md:px-6 right-1 absolute">
-                                Xem thêm
+                                See more
                             </Link>
                         </div>
                         
