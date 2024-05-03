@@ -187,12 +187,20 @@ const UserAuthForm = ({ type }) => {
           </button>
 
           {type == "sign-in" ? (
-            <p className="mt-6 text-blue-gwen text-xl text-center">
+            <>
+              <p className="mt-6 text-blue-gwen text-xl text-center">
               Don't have an account ?
               <Link to="/signup" className="underline text-white text-xl ml-1">
                 Join us today
               </Link>
             </p>
+            < p className="mt-6 text-blue-gwen text-xl text-center">
+              Forgot password ?
+              <Link to="/forgotpassword" className="underline text-white text-xl ml-1">
+              return password
+              </Link>
+          </p>
+            </>
           ) : (
             <p className="mt-6 text-blue-gwen text-xl text-center">
               Do you already have an account ?

@@ -171,9 +171,44 @@ server.get("/get-upload-music-url", (req, res) => {
 //   }
 // );
 
+
+server.post("/update-password", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required." });
+  }
+
+  try {
+    const user = await User.findOne({ "personal_info.email": email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    if (user.google_auth) {
+      return res.status(403).json({
+        error: "Google-authenticated users can't change password this way."
+      });
+    }
+
+    const hashed_password = await bcrypt.hash(password, 10);
+
+    const updatedUser = await User.findOneAndUpdate(
+      { "personal_info.email": email },
+      { "personal_info.password": hashed_password },
+      { new: true } 
+    );
+
+    return res.status(200).json({ status: "Password changed" });
+
+  } catch (error) {
+    console.error("Error updating password:", error);
+    return res.status(500).json({ error: "An error occurred while changing password." });
+  }
+});
 server.post("/signup", (req, res) => {
   let { fullname, email, password } = req.body;
-  //validating the data from frontend
   if (fullname.length < 3) {
     return res
       .status(403)
@@ -249,9 +284,9 @@ server.post("/signin", (req, res) => {
 });
 
 server.post("/change-password", verifyJWT, (req, res) => {
-  let {currentPassword, newPassword} = req.body
+  let {currentPassword, password} = req.body
 
-  if(!passwordRegex.test(currentPassword) || !passwordRegex.test(newPassword)){
+  if(!passwordRegex.test(currentPassword) || !passwordRegex.test(password)){
     return res.status(403).json({error:"Password should be 6 to 20 characters long with a numeric , 1 lowercase and 1 uppercase letters"})
   }
 
@@ -268,7 +303,7 @@ server.post("/change-password", verifyJWT, (req, res) => {
       if(!result){
         return res.status(403).json({error:"Incorrect password"})
       }
-      bcrypt.hash(newPassword,10,(err,hashed_password)=>{
+      bcrypt.hash(password,10,(err,hashed_password)=>{
         User.findOneAndUpdate({_id:req.user},{"personal_info.password":hashed_password})
         .then((u)=>{
           return res.status(200).json({status:"Password changed"})
@@ -395,6 +430,43 @@ server.post("/check-email", async (req, res) => {
   } catch (error) {
     console.error(error);
   }
+});
+server.post("/check-email-register", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const isEmailExist = await checkEmailExistence(email);
+
+    if (isEmailExist) {
+      // Email  tồn tại, gửi mã xác minh và thông báo lỗi
+    try {
+      console.log("isEmailExit:", isEmailExist);
+      const response = await sendVerificationCode(email);
+      console.log("respoense", response);
+      res
+        .status(200)
+        .json({ isEmailExist, verificationCodeSent: true, response });
+    } catch (error) {
+      res.status(500).json({
+        error: "Failed to send verification code",
+        verificationCodeSent: false,
+      });
+    }
+    }
+      // Email không tồn tại, không gửi mã xác minh
+
+
+    console.log("isEmailExit:", isEmailExist);
+      return res.status(200).json({
+        isEmailExist,
+        verificationCodeSent: false,
+        error: "Email is not registered",
+      });
+
+    
+  } catch (error) {
+    console.error(error);
+  }
+    
 });
 
 // server.post("/check-email", async (req, res) => {

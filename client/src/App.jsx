@@ -20,6 +20,9 @@ import TableAdmin from "./pages/admintable.components";
 import AdminAllBlogs from "./pages/adminAllBlogs.components";
 import TableBlogsAdmin from "./pages/adminTable.blogs.pages";
 import TrenDing from "./pages/trending.page";
+import ForgotPassword from "./pages/forgotpassword.page";
+import SendOtpForgotPassword from "./pages/otpforgotPassword";
+import ReturnPassword from "./pages/returnPassword.pages";
 
 export const UserContext = createContext({});
 
@@ -64,6 +67,9 @@ const App = () => {
           <Route path="signup" element={<UserAuthForm type={"sign-up"} />} />
           <Route path="search/:query" element={<SearchPage />} />
           <Route path="sendotp" element={<SendOtp />} />
+          <Route path="forgotpassword" element={<ForgotPassword />} />
+          <Route path="sendotpforgotpassword" element={<SendOtpForgotPassword />} />
+          <Route path="returnpassword" element={<ReturnPassword />} />
           <Route path='user/:id' element={<ProfilePage />} />
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />}/>
