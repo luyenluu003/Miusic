@@ -7,7 +7,6 @@ import AnimationWrapper from "../common/page-animation";
 import InPageNavigation from "../components/inpage-navigation.component"
 import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction";
-import "../components/style/playmusic.scss"
 import CommentsContainer, { fetchComments } from "../components/comments.components";
 
 export const blogStructure = {
@@ -283,7 +282,11 @@ const BlogPage = () => {
                                                                     onChange={changeProgress}
                                                                     min={0}
                                                                     max={duration}
-                                                                    step={1} className=" progresBar w-[90%] md:w-[78%] relative h-1 outline-none appearance-none rounded-xl bg-dark-grey cursor-pointer overflow-hidden mt-[6px] " />
+                                                                    step={1} className="w-[78%] relative h-1 outline-none appearance-none rounded-xl bg-dark-grey cursor-pointer overflow-hidden mt-[6px] 
+                                                                    before:content-[''] before:absolute before:[left-0] before:[top-0] before:w-[var(--player-played)] before:h-full before:bg-[#f1f1f1]
+                                                                    before:rounded-[10px] before:[z-index:2] before:[transition:all_0.3s_ease]
+                                                                    [&::-webkit-slider-thumb]:[appearance:none] [&::-webkit-slider-thumb]:w-[15px] [&::-webkit-slider-thumb]:h-[15px]
+                                                                    [&::-webkit-slider-thumb]:rounded-[50%] [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:outline-none" />
                                                                 <div className="text-[#f1f1f1] text-[12px] font-bold hidden md:block">
                                                                     {duration && !isNaN(duration) && CalculateTime(duration)
                                                                         ? CalculateTime(duration)

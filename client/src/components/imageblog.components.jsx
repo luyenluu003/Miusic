@@ -41,9 +41,9 @@ const ImageBlogCard = ({ content, author, onClick }) => {
         <>
             <Link to={`/blog/${id}`}>
                <div className="flex flex-wrap flex-row">
-                    <div className="flex items-center relative ">
-                        <img src={banner} className=" w-40 h-40 md:ml-0  md:w-189px md:h-123px rounded-xl object-cover" />
-                            <p className="text-gray-dark line-clamp-2 bg-dark-grey text-xs font-extralight absolute bottom-3 right-3"> {duration && !isNaN(duration) && CalculateTime(duration)
+                    <div className="flex items-center relative bg-[darkgrey] rounded-xl  hover:scale-125 hover:shadow-5 hover:z-20">
+                        <img src={banner} className=" w-60 h-40 md:ml-0  md:w-250px md:h-123px rounded-xl" />
+                            <p className="text-white line-clamp-2 bg-dark-grey text-xs font-extralight absolute bottom-2 right-2.5 rounded-lg px-3 py-1 opacity-80"> {duration && !isNaN(duration) && CalculateTime(duration)
                                 ? CalculateTime(duration)
                                 : "00:00"}</p>
                     </div>

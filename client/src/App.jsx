@@ -23,6 +23,9 @@ import TrenDing from "./pages/trending.page";
 import ForgotPassword from "./pages/forgotpassword.page";
 import SendOtpForgotPassword from "./pages/otpforgotPassword";
 import ReturnPassword from "./pages/returnPassword.pages";
+import Rules from "./pages/rules.page";
+import Helppage from "./pages/help.page";
+import Blogtroll from "./pages/blogtroll.page";
 
 export const UserContext = createContext({});
 
@@ -37,9 +40,6 @@ const App = () => {
       : setUserAuth({ accsess_token: null });
   }, []);
   
-
-
-
 
   return (
     <UserContext.Provider value={{ userAuth, setUserAuth }}>
@@ -73,6 +73,9 @@ const App = () => {
           <Route path='user/:id' element={<ProfilePage />} />
           <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />}/>
+          <Route path="rules" element={<Rules />}/>
+          <Route path="helppage" element={<Helppage />}/>
+          <Route path="blogtroll" element={<Blogtroll />}/>
         </Route>
       </Routes>
     </UserContext.Provider>

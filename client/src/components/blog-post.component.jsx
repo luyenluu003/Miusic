@@ -54,10 +54,10 @@ const BlogPostCard = ({ content, author, onClick }) => {
         // <Link to={`/blog/${id}`} className="flex gap-8 items-center">
         <>
             <div className="w-full" >
-                <div className="flex md:card w-full bg-colorcard m-2 p-2 md:m-6 md:p-8 rounded-xl " onClick={onClick}>
-                    <div className="flex items-center relative">
-                        <img src={banner} className=" w-20 h-20 md:ml-0 mr-9 md:w-189px md:h-123px rounded-xl" />
-                        <p className="text-gray-dark line-clamp-2 bg-dark-grey text-xs font-extralight absolute bottom-3 right-3"> {duration && !isNaN(duration) && CalculateTime(duration)
+                <div className="flex md:card w-full bg-colorcard m-2 p-2 md:m-6 md:p-8 rounded-xl cursor-pointer hover:shadow-2xl" onClick={onClick}>
+                    <div className="flex items-center relative bg-[darkgrey] rounded-xl">
+                        <img src={banner} className=" w-60 h-40 md:ml-0  md:w-250px md:h-123px rounded-xl" />
+                        <p className="text-white line-clamp-2 bg-dark-grey text-xs font-extralight absolute bottom-[-10px] right-[-20px] rounded-lg px-3 py-1 opacity-80"> {duration && !isNaN(duration) && CalculateTime(duration)
                                                     ? CalculateTime(duration)
                                                     : "00:00"}</p>
                     </div>

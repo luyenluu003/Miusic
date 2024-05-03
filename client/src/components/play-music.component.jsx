@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import "./style/playmusic.scss"
 
 const PlayMusic = ({ selectedBlog }) => {
     const [isPlaying, setPlaying] = useState(false);
@@ -138,6 +137,31 @@ const PlayMusic = ({ selectedBlog }) => {
     //     audioPlayer.current.loop = isRepeatClicked;
     // };
 
+    //volume
+    const volumeSlider = useRef();
+    const [volume, setVolume] = useState(); 
+    const [prevVolume, setPrevVolume] = useState(50);
+    const [show,setShow] = useState(true);
+    const handleVolumeChange = (e) => {
+        const newVolume = e.target.value;
+        setVolume(newVolume);
+        audioPlayer.current.volume = newVolume / 100;
+      };
+      const handleToggleVolume = () => {
+        if (volume > 0) {
+          // Nếu âm thanh đang lớn hơn 0, thực hiện hành động để đặt giá trị âm lượng về 0
+          setPrevVolume(volume);
+          setVolume(0);
+          setShow(!show)
+          audioPlayer.current.volume = 0;
+            
+        } else {
+          // Nếu âm thanh là 0, thực hiện hành động để khôi phục giá trị âm lượng từ trạng thái trước đó
+          setVolume(prevVolume);
+          audioPlayer.current.volume = prevVolume / 100;
+        }
+      };
+
 
     return (
         <>
@@ -196,7 +220,11 @@ const PlayMusic = ({ selectedBlog }) => {
                                                 onChange={changeProgress}
                                                 min={0}
                                                 max={duration}
-                                                step={1} className=" progresBar w-[78%] relative h-1 outline-none appearance-none rounded-xl bg-dark-grey cursor-pointer overflow-hidden mt-[6px] " />
+                                                step={1} className=" w-[78%] relative h-1 outline-none appearance-none rounded-xl bg-dark-grey cursor-pointer overflow-hidden mt-[6px] 
+                                                before:content-[''] before:absolute before:[left-0] before:[top-0] before:w-[var(--player-played)] before:h-full before:bg-[#f1f1f1]
+                                                before:rounded-[10px] before:[z-index:2] before:[transition:all_0.3s_ease]
+                                                [&::-webkit-slider-thumb]:[appearance:none] [&::-webkit-slider-thumb]:w-[15px] [&::-webkit-slider-thumb]:h-[15px]
+                                                [&::-webkit-slider-thumb]:rounded-[50%] [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:outline-none" />
                                             <div className="text-[#f1f1f1] text-[12px] font-bold">
                                                 {duration && !isNaN(duration) && CalculateTime(duration)
                                                     ? CalculateTime(duration)
@@ -206,6 +234,21 @@ const PlayMusic = ({ selectedBlog }) => {
                                     </>
                                 ) : null}
                             </div >
+                            <div className="volumeControl   flex items-center mg-2 ml-20 border-none mt-5">
+                                <i class="fi fi-rr-volume [color:#fff] mt-[5px] rounded-[50px] border-none w-[50px] text-xl " onClick={handleToggleVolume}  ></i>
+                                <input
+                                    type="range"
+                                    className="volumeSlider appearance-none accent-white  h-[2px] mx-[10%] border-none rounded-[.375em] outline-none cursor-pointer 
+                                    [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:h-[15px] [&::-webkit-slider-thumb]:w-[15px] 
+                                    [&::-webkit-slider-thumb]:rounded-[50%] [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer"
+                                    ref={volumeSlider}
+                                    value={volume}
+                                    audioPlayer={audioPlayer}
+                                    onChange={handleVolumeChange}
+                                    min={0}
+                                    max={100}
+                                />
+                            </div>
                         </div >
                     </>
                 ) : null}</>
