@@ -8,25 +8,20 @@ const Rules = () => {
     return (
         <section className="h-cover relative p-10 flex flex-col bg-gray">
             <div className="min-w-screen  bg-blue-100 flex items-center p-5 overflow-hidden relative">
-                <div className=" h-full min-w-full rounded-3xl  shadow-xl p-10  text-gray-800 relative md:flex items-center text-center md:text-left">
+                <div className=" h-full mt-10 min-w-full rounded-3xl bg-blue-gwen  shadow-xl p-10  text-gray-800 relative md:flex items-center text-center md:text-left">
                     <div className="w-full relative">
                         <div className="rules">
-                            <Link to="https://www.facebook.com/luu.luyen.927758" className="mt-5 flex items-center justify-center text-center font-bold outline-none 
-                            focus:outline-none transform transition-all hover:scale-110 text-yellow-500 text-white hover:text-yellow-600 cursor-pointer">
-                                <div className="w-[180px] h-10 bg-dark-grey justify-center text-center rounded-3xl">
-                                    <p className="text-7xl pt-2">Trung tâm trợ giúp</p>
-                                </div>
-                            </Link>
+                          
                             <Link to="/helppage" className="mt-5 flex items-center justify-center text-center text-17xl font-bold outline-none 
                             focus:outline-none transform transition-all hover:scale-110 text-yellow-500 text-white hover:text-yellow-600 cursor-pointer">
-                                <div className="w-[180px] h-10 bg-dark-grey justify-center text-center rounded-3xl">
-                                    <p className="text-7xl pt-2">Hộp thư hỗ trợ</p>
+                                <div className="w-[180px] h-10 bg-gray-900 justify-center text-center rounded-3xl">
+                                    <p className="text-7xl pt-2">Support mailbox</p>
                                 </div>
                             </Link>
                             <Link to="/blogtroll" className="mt-5 flex items-center justify-center text-center text-17xl font-bold outline-none 
                             focus:outline-none transform transition-all hover:scale-110 text-yellow-500 text-white hover:text-yellow-600 cursor-pointer">
-                                <div className="w-[180px] h-10 bg-dark-grey justify-center text-center rounded-3xl">
-                                    <p className="text-7xl pt-2">Điều khoản sử dụng</p>
+                                <div className="w-[180px] h-10 bg-gray-900 justify-center text-center rounded-3xl">
+                                    <p className="text-7xl pt-2">terms of use</p>
                                 </div>
                             </Link>
                         </div>

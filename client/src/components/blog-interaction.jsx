@@ -92,7 +92,7 @@ const BlogInteraction = () => {
                         username== author_username?
                         <Link to={`/editor/${blog_id}`} className="underline hover:text-purple text-white">Edit</Link> :""
                     }
-                    <Link to={`https://www.facebook.com`}><i class="fi fi-brands-facebook text-2xl text-white hover:text-blue-gwen"></i></Link>
+                    
                 </div>
             </div>
         </>
